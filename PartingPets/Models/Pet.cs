@@ -9,7 +9,7 @@ namespace PartingPets.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public int CustomerId { get; set; }
+        public int UserId { get; set; }
         public string Breed { get; set; }
         public DateTime DateOfBirth { get; set; }
         public DateTime DateOfDeath { get; set; }
