@@ -15,16 +15,16 @@ namespace PartingPets.Models
         public string State { get; set; }
         public string Zipcode { get; set; }
 
-        public Partners(int id, string name, string description, string street, string city, string state, string zipcode)
-        {
-            Id = id;
-            Name = name;
-            Description = description;
-            Street = street;
-            City = city;
-            State = state;
-            Zipcode = zipcode;
-        }
+        //public Partners(int id, string name, string description, string street, string city, string state, string zipcode)
+       // {
+           // Id = id;
+           //// Name = name;
+           // Description = description;
+           // Street = street;
+           // City = city;
+           // State = state;
+          //  Zipcode = zipcode;
+      //  }
 
     }
 
