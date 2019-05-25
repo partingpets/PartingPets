@@ -7,19 +7,6 @@ namespace PartingPets.Models
 {
     public class Pet
     {
-        public Pet(
-                string name,
-                string breed,
-                DateTime dateOfBirth,
-                DateTime dateOfDeath
-                )
-        {
-            Name = name;
-            Breed = breed;
-            DateOfBirth = dateOfBirth;
-            DateOfDeath = dateOfDeath;
-        }
-
         public int Id { get; set; }
         public string Name { get; set; }
         public int UserId { get; set; }
