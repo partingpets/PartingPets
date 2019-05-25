@@ -29,10 +29,11 @@ namespace PartingPets.Controllers
         }
 
         // GET: api/Partners/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        [HttpGet("{id}", Name = "GetPartnerById")]
+        public ActionResult GetPartnerById(int id)
         {
-            return "value";
+            var partner = _partnersRepository.GetPartner(id);
+            return Ok(partner);
         }
 
         // POST: api/Partners

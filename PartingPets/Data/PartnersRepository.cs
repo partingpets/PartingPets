@@ -20,5 +20,15 @@ namespace PartingPets.Data
                 return partners;
             }
         }
+
+        public Partners GetPartner(int id)
+        {
+            var sql = "select id, name, description, street, city, state, zipcode from partners where Id = @id;";
+            using (var db = new SqlConnection(ConnectionString))
+            {
+                var partner = db.QueryFirstOrDefault<Partners>(sql, new { id });
+                return partner;
+            }
+        }
     }
 }
