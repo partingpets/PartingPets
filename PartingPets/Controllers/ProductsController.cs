@@ -60,18 +60,18 @@ namespace PartingPets.Controllers
         }
 
 
-        //// PUT: api/Products/5
-        //[HttpPut("{id}")]
-        //public ActionResult UpdateProduct(UpdateProductRequest updateProductRequest)
-        //{
-        //    if (updateProductRequest == null)
-        //    {
-        //        return BadRequest(new { error = "we need more product infomation" });
-        //    }
-        //    var updatedproduct = _productRepository.UpdateProduct(updateProductRequest);
+        //// PUT: api/Products/Update/5
+        [HttpPut("update/{id}")]
+        public ActionResult UpdateProduct(int id, Product productToUpdate)
+        {
+            if (id != productToUpdate.ID)
+            {
+                return BadRequest(new { error = "we need more product infomation" });
+            }
+            var updatedProduct = _productRepository.UpdateProduct(productToUpdate);
 
-        //    return Ok();
-        //}
+            return Ok(updatedProduct);
+        }
 
 
 

@@ -97,13 +97,15 @@ namespace PartingPets.Data
                 var rowsAffected = db.Execute(updateQuery, productToUpdate);
 
                 if (rowsAffected == 1)
+                {
                     return productToUpdate;
+                }
+
+                throw new Exception("There Was An Error. Your Parting Pets Product Wasn't Updated");
             }
 
-            throw new Exception("There Was An Error. Your Parting Pets Product Wasn't Updated");
         }
-
     }
-
 }
+
 
