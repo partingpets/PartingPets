@@ -63,29 +63,20 @@ namespace PartingPets.Data
             }
         }
 
-        // Get Single Product By ID //
-
-        //public Product GetProductById(int ID)
-        //{
-        //    var selectedProduct = products.Find(Product => Product.Id == productId);
-        //    return selectedProduct;
-        //}
-
         // Delete Product Command //
 
         public void DeleteProduct(int ID)
         {
             using (var db = new SqlConnection(ConnectionString))
             {
-                var parameter = new { ID = ID };
-
-                var deleteQuery = "Delete From Products where ID = @id";
+                var parameter = new { Id = ID };
+                var deleteQuery = "Delete from Products where ID = @id";
 
                 var rowsAffected = db.Execute(deleteQuery, parameter);
 
                 if (rowsAffected != 1)
                 {
-                    throw new Exception("There Was An Error. You're Parting Pets Product Wasn't Deleted.");
+                    throw new Exception("there was an error. you're parting pets product wasn't deleted.");
                 }
             }
         }
@@ -96,14 +87,14 @@ namespace PartingPets.Data
         {
             using (var db = new SqlConnection(ConnectionString))
             {
-                var sql = @"Update Products
-                            Set name = @name,
-                                unitPrice = @unitPrice,
-                                description = @description,
-                                isOnSale = @isOnSale
-                            Where id = @id";
+                var updateQuery = @"Update Products
+                                Set Name = @name,
+                                UnitPrice = @unitPrice,
+                                Description = @description,
+                                IsOnSale = @isOnSale
+                            Where ID = @id";
 
-                var rowsAffected = db.Execute(sql, productToUpdate);
+                var rowsAffected = db.Execute(updateQuery, productToUpdate);
 
                 if (rowsAffected == 1)
                     return productToUpdate;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -61,21 +62,18 @@ namespace PartingPets.Controllers
 
         //// PUT: api/Products/5
         //[HttpPut("{id}")]
-        //public ActionResult UpdateProduct(int id, UpdateProductRequest updateProductRequest)
+        //public ActionResult UpdateProduct(UpdateProductRequest updateProductRequest)
         //{
         //    if (updateProductRequest == null)
         //    {
-        //        return BadRequest(new { error = "We Need More Product Infomation" });
+        //        return BadRequest(new { error = "we need more product infomation" });
         //    }
-        //    var updatedProduct = _productRepository.UpdateProduct(
-        //        id,
-        //        updateProductRequest.Name,
-        //        updateProductRequest.UnitPrice,
-        //        updateProductRequest.Description,
-        //        updateProductRequest.IsOnSale);
+        //    var updatedproduct = _productRepository.UpdateProduct(updateProductRequest);
 
         //    return Ok();
         //}
+
+
 
 
         // DELETE: api/ApiWithActions/5
@@ -84,7 +82,7 @@ namespace PartingPets.Controllers
         {
             _productRepository.DeleteProduct(id);
 
-            return Ok();
+            return Ok("Your Parting Pets Product Has Been Deleted");
         }
     }
 }
