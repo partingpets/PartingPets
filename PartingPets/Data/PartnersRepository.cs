@@ -50,5 +50,22 @@ namespace PartingPets.Data
             throw new Exception("Unfortunatley, a Parting Pets Partner was not created");
                
         }
+
+        public void DeletePartner(int id)
+        {
+            using (var db = new SqlConnection(ConnectionString))
+            {
+                var parameter = new { Id = id };
+
+                var deleteQuery = "Delete from Partners where Id = @id";
+
+                var rowsAffected = db.Execute(deleteQuery, parameter);
+
+                if (rowsAffected != 1)
+                {
+                    throw new Exception("We couldn't delete the user at this time");
+                }
+            }
+        }
     }
 }

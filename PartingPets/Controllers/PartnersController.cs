@@ -70,8 +70,11 @@ namespace PartingPets.Controllers
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult DeletePartner(int id)
         {
+            _partnersRepository.DeletePartner(id);
+
+            return Ok("The partner was deleted");
         }
     }
 }
