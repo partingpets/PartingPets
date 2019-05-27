@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PartingPets.Data;
+using PartingPets.Models;
+using PartingPets.Validators;
 
 namespace PartingPets.Controllers
 {
@@ -14,10 +16,12 @@ namespace PartingPets.Controllers
     {
 
         readonly PartnersRepository _partnersRepository;
+        readonly PartnerRequestValidator _validator;
 
         public PartnersController()
         {
             _partnersRepository = new PartnersRepository();
+            _validator = new PartnerRequestValidator();
         }
 
         // GET: api/Partners
@@ -38,8 +42,24 @@ namespace PartingPets.Controllers
 
         // POST: api/Partners
         [HttpPost]
-        public void Post([FromBody] string value)
+        public ActionResult AddPartner(CreatePartnerRequest createRequest)
         {
+            if (!_validator.Validate(createRequest))
+            {
+                return BadRequest(new { error = "We need all the information to become a Parting Pets Partner" });
+            }
+
+            var newPartner = _partnersRepository.AddPartner(
+                createRequest.Name,
+                createRequest.Description,
+                createRequest.Street,
+                createRequest.City,
+                createRequest.State,
+                createRequest.Zipcode
+                );
+
+            return Created($"api/partners/{newPartner.Id}", newPartner);
+
         }
 
         // PUT: api/Partners/5

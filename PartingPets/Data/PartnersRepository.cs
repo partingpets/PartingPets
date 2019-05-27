@@ -30,5 +30,25 @@ namespace PartingPets.Data
                 return partner;
             }
         }
+
+        public Partners AddPartner(string name, string description, string street, string city, string state, string zipcode)
+        {
+            using (var db = new SqlConnection(ConnectionString))
+            {
+                var newPartner = db.QueryFirstOrDefault<Partners>(@"
+                    Insert into partners(name, description, street, city, state, zipcode)
+                    Output inserted.*
+                    Values(@name, @description, @street, @city, @state, @zipcode)",
+                    new { name, description, street, city, state, zipcode});
+
+                if (newPartner != null)
+                {
+                    return newPartner;
+                }
+            }
+
+            throw new Exception("Unfortunatley, a Parting Pets Partner was not created");
+               
+        }
     }
 }
