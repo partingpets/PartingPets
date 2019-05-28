@@ -89,6 +89,7 @@ namespace PartingPets.Data
             {
                 var updateQuery = @"Update Products
                                 Set Name = @name,
+                                CategoryId = @categoryId,
                                 UnitPrice = @unitPrice,
                                 Description = @description,
                                 IsOnSale = @isOnSale

@@ -66,7 +66,7 @@ namespace PartingPets.Controllers
         {
             if (id != productToUpdate.ID)
             {
-                return BadRequest(new { error = "we need more product infomation" });
+                return BadRequest(new { Error = "Parting Pets Needs A Bit More Product Information" });
             }
             var updatedProduct = _productRepository.UpdateProduct(productToUpdate);
 
