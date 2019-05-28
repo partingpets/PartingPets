@@ -45,6 +45,15 @@ namespace PartingPets.Controllers
             return Ok(selectedCategory);
         }
 
+        // ----- GET ALL PRODUCTS BY PARTNER ID ---- //
+        // GET: api/Products/Partners/3
+        [HttpGet("partners/{partnerId}")]
+        public ActionResult GetProductsByPartner(int partnerId)
+        {
+            var selectedPartner = _productRepository.GetProductsByPartner(partnerId);
+
+            return Ok(selectedPartner);
+        }
 
         // ----- GET PRODUCT BY ID ---- //
         // GET: api/Products/5

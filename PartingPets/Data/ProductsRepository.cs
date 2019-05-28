@@ -61,6 +61,21 @@ namespace PartingPets.Data
             }
         }
 
+
+        // Get Products By PartnerId //
+
+        public IEnumerable<Product> GetProductsByPartner(int partnerId)
+        {
+            using (var db = new SqlConnection(ConnectionString))
+            {
+                var selectedPartner = db.Query<Product>("select id, name, unitPrice, description, isOnSale from products where partnerId = @partnerId", new { partnerId });
+
+
+                return selectedPartner;
+            }
+        }
+
+
         // Get Single Product By ID //
 
         public IEnumerable<Product> GetProductById(int ID)
