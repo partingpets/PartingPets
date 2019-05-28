@@ -44,7 +44,7 @@ DROP TABLE [dbo].[User]
 GO
 -- Create the table in the specified schema
 CREATE TABLE [dbo].[User](
-    [ID] [int] NOT NULL IDENTITY(1,1),
+    [Id] [int] NOT NULL IDENTITY(1,1),
     [FirstName] [nvarchar](255) NOT NULL,
     [LastName] [nvarchar](255) NOT NULL,
     [Street] [nvarchar](255) NOT NULL,
@@ -54,9 +54,30 @@ CREATE TABLE [dbo].[User](
     [Email] [nvarchar](255) NOT NULL,
     [IsPartner] [bit] NOT NULL,
     [PartnerID] [int],
+    [DateCreated] [datetime] NOT NULL,
+    [DateDeleted] [datetime],
+    [IsDeleted] [bit] NOT NULL,
 CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED 
 (
-    [ID] ASC
+    [Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+-- Create a new table called '[PaymentType]' in schema '[dbo]'
+-- Drop the table if it already exists
+IF OBJECT_ID('[dbo].[PaymentType]', 'U') IS NOT NULL
+DROP TABLE [dbo].[PaymentType]
+GO
+-- Create the table in the specified schema
+CREATE TABLE [dbo].[PaymentType](
+    [Id] [int] NOT NULL IDENTITY(1,1),
+    [UserId] [int] NOT NULL,
+    [Name] [nvarchar](255) NOT NULL,
+    [AccountNumber] [nvarchar](50) NOT NULL
+CONSTRAINT [PK_PaymentType] PRIMARY KEY CLUSTERED 
+(
+    [Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -68,7 +89,8 @@ DROP TABLE [dbo].[Invoice]
 GO
 -- Create the table in the specified schema
 CREATE TABLE [dbo].[Invoice](
-    [ID] [int] NOT NULL IDENTITY(1,1),
+    [Id] [int] NOT NULL IDENTITY(1,1),
+    [PaymentTypeId] [int] NOT NULL,
     [UserID] [int] NOT NULL,
     [BillingStreet] [nvarchar](255) NOT NULL,
     [BillingZip] [int] NOT NULL,
@@ -77,7 +99,7 @@ CREATE TABLE [dbo].[Invoice](
     [Total] [numeric](10, 2) NOT NULL,
 CONSTRAINT [PK_Invoice] PRIMARY KEY CLUSTERED 
 (
-    [ID] ASC
+    [Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -89,15 +111,15 @@ DROP TABLE [dbo].[InvoiceLine]
 GO
 -- Create the table in the specified schema
 CREATE TABLE [dbo].[InvoiceLine](
-    [ID] [int] NOT NULL IDENTITY(1,1),
-    [InvoiceID] [int] NOT NULL,
-    [ProductID] [int] NOT NULL,
+    [Id] [int] NOT NULL IDENTITY(1,1),
+    [InvoiceId] [int] NOT NULL,
+    [ProductId] [int] NOT NULL,
     [Quantity] [int] NOT NULL,
     [UnitPrice] [numeric](10, 2) NOT NULL,
     [ExtendedPrice] [numeric](10, 2) NOT NULL,
 CONSTRAINT [PK_InvoiceLine] PRIMARY KEY CLUSTERED 
 (
-    [ID] ASC
+    [Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -109,16 +131,18 @@ DROP TABLE [dbo].[Partners]
 GO
 -- Create the table in the specified schema
 CREATE TABLE [dbo].[Partners](
-    [ID] [int] NOT NULL IDENTITY(1,1),
+    [Id] [int] NOT NULL IDENTITY(1,1),
     [Name] [nvarchar](255) NOT NULL,
     [Description] [nvarchar](255) NOT NULL,
     [Street] [nvarchar](255) NOT NULL,
     [City] [nvarchar](255) NOT NULL,
     [State] [nvarchar](255) NOT NULL,
     [Zipcode] [int] NOT NULL,
+    [IsDeleted] [bit],
+    [DateDeleted] [datetime],
 CONSTRAINT [PK_Partners] PRIMARY KEY CLUSTERED 
 (
-    [ID] ASC
+    [Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -130,20 +154,20 @@ DROP TABLE [dbo].[Pets]
 GO
 -- Create the table in the specified schema
 CREATE TABLE [dbo].[Pets](
-    [ID] [int] NOT NULL IDENTITY(1,1),
+    [Id] [int] NOT NULL IDENTITY(1,1),
     [Name] [nvarchar](255) NOT NULL,
     [UserId] [int] NOT NULL,
     [Breed] [nvarchar](255) NOT NULL,
     [DateOfBirth] [datetime] NOT NULL,
-    [DateOfDeath] [datetime] NOT NULL,
-    [BurialStreet] [nvarchar](255) NOT NULL,
+    [DateOfDeath] [datetime] NULL,
+    [BurialStreet] [nvarchar](255) NULL,
     [BurialCity] [nvarchar](255) NULL,
     [BurialState] [nvarchar](255) NULL,
-    [BurialZipCode] [nvarchar](255) NOT NULL,
-    [BurialPlot] [nvarchar](255) NOT NULL,
+    [BurialZipCode] [nvarchar](255) NULL,
+    [BurialPlot] [nvarchar](255) NULL,
 CONSTRAINT [PK_Pets] PRIMARY KEY CLUSTERED 
 (
-    [ID] ASC
+    [Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -155,12 +179,12 @@ DROP TABLE [dbo].[ProductCategory]
 GO
 -- Create the table in the specified schema
 CREATE TABLE [dbo].[ProductCategory](
-    [ID] [int] NOT NULL IDENTITY(1,1),
+    [Id] [int] NOT NULL IDENTITY(1,1),
     [Name] [nvarchar](255) NOT NULL,
     [Type] [nvarchar](255) NOT NULL,
 CONSTRAINT [PK_ProductCategory] PRIMARY KEY CLUSTERED 
 (
-    [ID] ASC
+    [Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -172,16 +196,17 @@ DROP TABLE [dbo].[Products]
 GO
 -- Create the table in the specified schema
 CREATE TABLE [dbo].[Products](
-    [ID] [int] NOT NULL IDENTITY(1,1),
+    [Id] [int] NOT NULL IDENTITY(1,1),
     [Name] [nvarchar](255) NOT NULL,
     [CategoryId] [int] NOT NULL,
     [UnitPrice] [numeric](10, 2) NOT NULL,
     [PartnerID] [int],
     [Description] [nvarchar](255) NOT NULL,
     [IsOnSale] [bit] NOT NULL,
+    [IsDeleted] [bit],
 CONSTRAINT [PK_Products] PRIMARY KEY CLUSTERED 
 (
-    [ID] ASC
+    [Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -194,38 +219,45 @@ CREATE NONCLUSTERED INDEX [idx_User_FirstName] ON [dbo].[User]
     [FirstName] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
+
 ALTER TABLE [dbo].[Invoice]  WITH CHECK ADD  CONSTRAINT [FK_Invoice_UserID] FOREIGN KEY([UserID])
-REFERENCES [dbo].[User] ([ID])
+REFERENCES [dbo].[User] ([Id])
+GO
+ALTER TABLE [dbo].[PaymentType]  WITH CHECK ADD  CONSTRAINT [FK_PaymentType_UserID] FOREIGN KEY([UserID])
+REFERENCES [dbo].[User] ([Id])
+GO
+ALTER TABLE [dbo].[Invoice]  WITH CHECK ADD  CONSTRAINT [FK_Invoice_PaymentTypeId] FOREIGN KEY([PaymentTypeId])
+REFERENCES [dbo].[PaymentType] ([Id])
 GO
 ALTER TABLE [dbo].[Invoice] CHECK CONSTRAINT [FK_Invoice_UserID]
 GO
 ALTER TABLE [dbo].[InvoiceLine]  WITH CHECK ADD  CONSTRAINT [FK_InvoiceLine_InvoiceID] FOREIGN KEY([InvoiceID])
-REFERENCES [dbo].[Invoice] ([ID])
+REFERENCES [dbo].[Invoice] ([Id])
 GO
 ALTER TABLE [dbo].[InvoiceLine] CHECK CONSTRAINT [FK_InvoiceLine_InvoiceID]
 GO
 ALTER TABLE [dbo].[InvoiceLine]  WITH CHECK ADD  CONSTRAINT [FK_InvoiceLine_ProductID] FOREIGN KEY([ProductID])
-REFERENCES [dbo].[Products] ([ID])
+REFERENCES [dbo].[Products] ([Id])
 GO
 ALTER TABLE [dbo].[InvoiceLine] CHECK CONSTRAINT [FK_InvoiceLine_ProductID]
 GO
 ALTER TABLE [dbo].[Pets]  WITH CHECK ADD  CONSTRAINT [FK_Pets_UserId] FOREIGN KEY([UserId])
-REFERENCES [dbo].[User] ([ID])
+REFERENCES [dbo].[User] ([Id])
 GO
 ALTER TABLE [dbo].[Pets] CHECK CONSTRAINT [FK_Pets_UserId]
 GO
 ALTER TABLE [dbo].[Products]  WITH CHECK ADD  CONSTRAINT [FK_Products_CategoryId] FOREIGN KEY([CategoryId])
-REFERENCES [dbo].[ProductCategory] ([ID])
+REFERENCES [dbo].[ProductCategory] ([Id])
 GO
 ALTER TABLE [dbo].[Products] CHECK CONSTRAINT [FK_Products_CategoryId]
 GO
 ALTER TABLE [dbo].[Products]  WITH CHECK ADD  CONSTRAINT [FK_Products_PartnerID] FOREIGN KEY([PartnerID])
-REFERENCES [dbo].[Partners] ([ID])
+REFERENCES [dbo].[Partners] ([Id])
 GO
 ALTER TABLE [dbo].[Products] CHECK CONSTRAINT [FK_Products_PartnerID]
 GO
 ALTER TABLE [dbo].[User]  WITH CHECK ADD  CONSTRAINT [FK_User_Partners] FOREIGN KEY([PartnerID])
-REFERENCES [dbo].[Partners] ([ID])
+REFERENCES [dbo].[Partners] ([Id])
 GO
 ALTER TABLE [dbo].[User] CHECK CONSTRAINT [FK_User_Partners]
 GO
@@ -253,16 +285,17 @@ USE PartingPets
     INSERT INTO [dbo].[Partners] ([Name], [Description], [Street], [City], [State], [Zipcode]) VALUES ('Avavee','Etiam vel augue. Vestibulum rutrum rutrum neque.','34941 Crescent Oaks Street','Hattiesburg','Mississippi','39404')
 
 USE PartingPets
-    INSERT INTO [dbo].[User] ([FirstName], [LastName], [Street], [City], [State], [ZipCode], [Email], [IsPartner], [PartnerID]) VALUES ('Webster','Frami','4979 Collier Walks','New Martineton','Maine','66888','Crystal_Nader@maida.com',0, null)
-    INSERT INTO [dbo].[User] ([FirstName], [LastName], [Street], [City], [State], [ZipCode], [Email], [IsPartner], [PartnerID]) VALUES ('Irwin','Goodwin','956 Mann Coves North','Laurence','Iowa','40989','Golda_Bins@buster.info',1, 4)
-    INSERT INTO [dbo].[User] ([FirstName], [LastName], [Street], [City], [State], [ZipCode], [Email], [IsPartner], [PartnerID]) VALUES ('Jaunita','Rippin','45573 Marley Junctions','Ortizland','Nevada','68240','Murphy@ariel.us',0, null)
-    INSERT INTO [dbo].[User] ([FirstName], [LastName], [Street], [City], [State], [ZipCode], [Email], [IsPartner], [PartnerID]) VALUES ('Lori','Stark','89462 Susanna Station North','Alysson','Massachusetts','16759','Kara@laverne.org',0, null)
-    INSERT INTO [dbo].[User] ([FirstName], [LastName], [Street], [City], [State], [ZipCode], [Email], [IsPartner], [PartnerID]) VALUES ('Shanna','Sawayn','01649 Karlee Union','New Noah','New York','96813','Morgan@rosemary.me',0, null)
-    INSERT INTO [dbo].[User] ([FirstName], [LastName], [Street], [City], [State], [ZipCode], [Email], [IsPartner], [PartnerID]) VALUES ('Lavinia','Schmitt','420 Ratke Estates','Turnerfort','Wisconsin','94996','Darrin@judson.tv',1, 8)
-    INSERT INTO [dbo].[User] ([FirstName], [LastName], [Street], [City], [State], [ZipCode], [Email], [IsPartner], [PartnerID]) VALUES ('Willis','Mohr','7984 Rath Brook','Wolffurt','Kansas','58656-2132','Chadrick.Stokes@toney.name',0, null)
-    INSERT INTO [dbo].[User] ([FirstName], [LastName], [Street], [City], [State], [ZipCode], [Email], [IsPartner], [PartnerID]) VALUES ('Freeda','Torp','0809 Feil Pine West','Santos','Idaho','31470','Isabel@miracle.us',0, null)
-    INSERT INTO [dbo].[User] ([FirstName], [LastName], [Street], [City], [State], [ZipCode], [Email], [IsPartner], [PartnerID]) VALUES ('Dejah','Veum','754 John Greens West','Celine','Massachusetts','69584-1413','Christ@elsie.info',0, null)
-    INSERT INTO [dbo].[User] ([FirstName], [LastName], [Street], [City], [State], [ZipCode], [Email], [IsPartner], [PartnerID]) VALUES ('Mikel','Carter','763 Leannon Cove','Blandamouth','Iowa','43249-7406','Jessika@davion.info',1, 12)
+    INSERT INTO [dbo].[User] ([FirstName], [LastName], [Street], [City], [State], [ZipCode], [Email], [IsPartner], [PartnerID], [DateCreated], [DateDeleted], [IsDeleted]) VALUES ('Webster','Frami','4979 Collier Walks','New Martineton','Maine','66888','Crystal_Nader@maida.com',0, null, '2019-04-05 11:25:23', null, 0)
+    INSERT INTO [dbo].[User] ([FirstName], [LastName], [Street], [City], [State], [ZipCode], [Email], [IsPartner], [PartnerID], [DateCreated], [DateDeleted], [IsDeleted]) VALUES ('Irwin','Goodwin','956 Mann Coves North','Laurence','Iowa','40989','Golda_Bins@buster.info', 1, 4, '2018-11-23 14:16:21', null, 0)
+    INSERT INTO [dbo].[User] ([FirstName], [LastName], [Street], [City], [State], [ZipCode], [Email], [IsPartner], [PartnerID], [DateCreated], [DateDeleted], [IsDeleted]) VALUES ('Jaunita','Rippin','45573 Marley Junctions','Ortizland','Nevada','68240','Murphy@ariel.us', 0, null, '2018-07-10 11:01:39', null, 0)
+    INSERT INTO [dbo].[User] ([FirstName], [LastName], [Street], [City], [State], [ZipCode], [Email], [IsPartner], [PartnerID], [DateCreated], [DateDeleted], [IsDeleted]) VALUES ('Lori','Stark','89462 Susanna Station North','Alysson','Massachusetts','16759','Kara@laverne.org', 0, null, '2018-08-24 19:49:16', null, 0)
+    INSERT INTO [dbo].[User] ([FirstName], [LastName], [Street], [City], [State], [ZipCode], [Email], [IsPartner], [PartnerID], [DateCreated], [DateDeleted], [IsDeleted]) VALUES ('Shanna','Sawayn','01649 Karlee Union','New Noah','New York','96813','Morgan@rosemary.me', 0, null, '2018-08-09 19:40:41', null, 0)
+    INSERT INTO [dbo].[User] ([FirstName], [LastName], [Street], [City], [State], [ZipCode], [Email], [IsPartner], [PartnerID], [DateCreated], [DateDeleted], [IsDeleted]) VALUES ('Lavinia','Schmitt','420 Ratke Estates','Turnerfort','Wisconsin','94996','Darrin@judson.tv', 1, 8, '2019-05-16 12:48:19', null, 0)
+    INSERT INTO [dbo].[User] ([FirstName], [LastName], [Street], [City], [State], [ZipCode], [Email], [IsPartner], [PartnerID], [DateCreated], [DateDeleted], [IsDeleted]) VALUES ('Willis','Mohr','7984 Rath Brook','Wolffurt','Kansas','58656-2132','Chadrick.Stokes@toney.name', 0, null, '2019-05-10 16:23:24', null, 0)
+    INSERT INTO [dbo].[User] ([FirstName], [LastName], [Street], [City], [State], [ZipCode], [Email], [IsPartner], [PartnerID], [DateCreated], [DateDeleted], [IsDeleted]) VALUES ('Freeda','Torp','0809 Feil Pine West','Santos','Idaho','31470','Isabel@miracle.us', 0, null, '2018-06-22 16:24:50', null, 0)
+    INSERT INTO [dbo].[User] ([FirstName], [LastName], [Street], [City], [State], [ZipCode], [Email], [IsPartner], [PartnerID], [DateCreated], [DateDeleted], [IsDeleted]) VALUES ('Dejah','Veum','754 John Greens West','Celine','Massachusetts','69584-1413','Christ@elsie.info', 0, null, '2018-06-01 20:22:09', null, 0)
+    INSERT INTO [dbo].[User] ([FirstName], [LastName], [Street], [City], [State], [ZipCode], [Email], [IsPartner], [PartnerID], [DateCreated], [DateDeleted], [IsDeleted]) VALUES ('Mikel','Carter','763 Leannon Cove','Blandamouth','Iowa','43249-7406','Jessika@davion.info', 1, 12, '2018-07-13 07:08:48', '2018-12-15 03:32:50', 1)
+
 
 USE PartingPets
     INSERT INTO [dbo].[Pets] ([UserId], [Name], [Breed], [DateOfBirth], [DateOfDeath], [BurialStreet], [BurialCity], [BurialState], [BurialZipCode], [BurialPlot]) VALUES (1,'Spotted Beebalm','Pie, rufous tree','2007-06-26 04:32:05','2017-07-11 04:24:56','2404 Sommers Point','Stockton','California','95205','XND-16')
@@ -277,6 +310,10 @@ USE PartingPets
     INSERT INTO [dbo].[Pets] ([UserId], [Name], [Breed], [DateOfBirth], [DateOfDeath], [BurialStreet], [BurialCity], [BurialState], [BurialZipCode], [BurialPlot]) VALUES (10,'Lindenleaf Rosemallow','Bengal vulture','2006-03-24 02:35:04','2015-01-05 07:02:17','76 Ramsey Lane','Milwaukee','Wisconsin','53234','GRA-26')
     INSERT INTO [dbo].[Pets] ([UserId], [Name], [Breed], [DateOfBirth], [DateOfDeath], [BurialStreet], [BurialCity], [BurialState], [BurialZipCode], [BurialPlot]) VALUES (3,'Front Range Twinpod','White-bellied sea eagle','2013-04-22 20:42:24','2014-03-04 21:45:49','07 Reindahl Avenue','Dallas','Texas','75251','YUI-58')
     INSERT INTO [dbo].[Pets] ([UserId], [Name], [Breed], [DateOfBirth], [DateOfDeath], [BurialStreet], [BurialCity], [BurialState], [BurialZipCode], [BurialPlot]) VALUES (5,'Hawai''i Silversword','Collared lizard','2008-07-25 10:50:40','2004-11-07 10:29:37','378 Sycamore Hill','Charlotte','North Carolina','28272','SWM-40')
+
+USE PartingPets
+    INSERT INTO [dbo].[PaymentType] ([UserId], [Name], [AccountNumber]) VALUES (1, 'American Express', '3111111111111117')
+    INSERT INTO [dbo].[PaymentType] ([UserId], [Name], [AccountNumber]) VALUES (3, 'Visa', '4111111111111111')
 
 USE PartingPets
     INSERT INTO [dbo].[ProductCategory] ([Name], [Type]) VALUES ('Casket','Product')
@@ -302,8 +339,8 @@ USE PartingPets
     INSERT INTO [dbo].[Products] ([Name], [CategoryId], [UnitPrice], [PartnerID], [Description], [IsOnSale]) VALUES ('Gold Burial Service', 7, 179.99, 11, 'Burial service that includes Silver service plus a gun salute', 0)
    
 USE PartingPets
-    INSERT INTO [dbo].[Invoice] ([UserID], [BillingStreet], [BillingCity], [BillingState], [BillingZip], [Total]) VALUES (1, '4979 Collier Walks','New Martineton','Maine','66888', 119.98)
-    INSERT INTO [dbo].[Invoice] ([UserID], [BillingStreet], [BillingCity], [BillingState], [BillingZip], [Total]) VALUES (3, '45573 Marley Junctions','Ortizland','Nevada','68240', 306.98)
+    INSERT INTO [dbo].[Invoice] ([PaymentTypeId], [UserID], [BillingStreet], [BillingCity], [BillingState], [BillingZip], [Total]) VALUES (1, 1, '4979 Collier Walks','New Martineton','Maine','66888', 119.98)
+    INSERT INTO [dbo].[Invoice] ([PaymentTypeId], [UserID], [BillingStreet], [BillingCity], [BillingState], [BillingZip], [Total]) VALUES (2, 3, '45573 Marley Junctions','Ortizland','Nevada','68240', 306.98)
     
 
 USE PartingPets
@@ -311,3 +348,5 @@ USE PartingPets
     INSERT INTO [dbo].[InvoiceLine] ([InvoiceID], [ProductID], [Quantity], [UnitPrice], [ExtendedPrice]) VALUES (1,3, 2, 9.99, 19.98)
     INSERT INTO [dbo].[InvoiceLine] ([InvoiceID], [ProductID], [Quantity], [UnitPrice], [ExtendedPrice]) VALUES (2, 5, 1, 29.99, 29.99)
     INSERT INTO [dbo].[InvoiceLine] ([InvoiceID], [ProductID], [Quantity], [UnitPrice], [ExtendedPrice]) VALUES (2, 2, 1, 276.99, 276.99)
+
+USE master
