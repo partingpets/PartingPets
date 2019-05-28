@@ -31,7 +31,7 @@ namespace PartingPets.Data
                 }
             }
 
-            throw new Exception("No Parting Pets Product Created");
+            throw new Exception("Sorry. No Parting Pets Product Was Created.");
         }
 
 
@@ -48,15 +48,28 @@ namespace PartingPets.Data
             }
         }
 
+        // Get Products By CategoryId //
+        
+        public IEnumerable<Product> GetProductsByCategory(int categoryId)
+        {
+            using (var db = new SqlConnection(ConnectionString))
+            {
+                var selectedCategory = db.Query<Product>("select id, name, unitPrice, description, isOnSale from products where categoryId = @categoryId", new { categoryId });
+
+
+                return selectedCategory;
+            }
+        }
+
         // Get Single Product By ID //
 
-        public IEnumerable<Product> GetProductById(int iD)
+        public IEnumerable<Product> GetProductById(int ID)
         {
             using (var db = new SqlConnection(ConnectionString))
             {
 
 
-                var selectedProduct = db.Query<Product>("select id, name, description, isOnSale from products where Id = @id", new { iD });
+                var selectedProduct = db.Query<Product>("select id, name, description, isOnSale from products where Id = @id", new { ID });
 
 
                 return selectedProduct;
@@ -76,7 +89,7 @@ namespace PartingPets.Data
 
                 if (rowsAffected != 1)
                 {
-                    throw new Exception("there was an error. you're parting pets product wasn't deleted.");
+                    throw new Exception("Error. We're Sorry, But Your Parting Pets Product Was Not Deleted.");
                 }
             }
         }
@@ -93,7 +106,7 @@ namespace PartingPets.Data
                                 UnitPrice = @unitPrice,
                                 Description = @description,
                                 IsOnSale = @isOnSale
-                            Where ID = @id";
+                                Where ID = @id";
 
                 var rowsAffected = db.Execute(updateQuery, productToUpdate);
 

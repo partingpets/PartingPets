@@ -25,7 +25,7 @@ namespace PartingPets.Controllers
             _productRepository = new ProductsRepository();
         }
 
-
+        // ----- GET ALL PRODUCTS ---- //
         // GET: api/Products
         [HttpGet]
         public ActionResult GetAllProducts()
@@ -35,7 +35,18 @@ namespace PartingPets.Controllers
             return Ok(products);
         }
 
+        // ----- GET ALL PRODUCTS BY CATEGORY ID ---- //
+        // GET: api/Products/Category/3
+        [HttpGet("category/{categoryId}")]
+        public ActionResult GetProductsByCategory(int categoryId)
+        {
+            var selectedCategory = _productRepository.GetProductsByCategory(categoryId);
 
+            return Ok(selectedCategory);
+        }
+
+
+        // ----- GET PRODUCT BY ID ---- //
         // GET: api/Products/5
         [HttpGet("{id}")]
         public ActionResult GetProductById(int id)
@@ -44,14 +55,14 @@ namespace PartingPets.Controllers
         }
 
 
-
+        // ----- ADD NEW PRODUCT ---- //
         // POST: api/Products
         [HttpPost]
         public ActionResult AddProduct(CreateProductRequest createRequest)
         {
             if (!_validator.Validate(createRequest))
             {
-                return BadRequest(new { error = "We Need More Info For Your Product?" });
+                return BadRequest(new { error = "Parting Pets Requests You Fill All Necessary Fields." });
             }
 
             var newProduct = _productRepository.AddProduct(createRequest.Name, createRequest.UnitPrice, createRequest.CategoryId, createRequest.Description, createRequest.IsOnSale);
@@ -60,13 +71,14 @@ namespace PartingPets.Controllers
         }
 
 
-        //// PUT: api/Products/Update/5
+        // ----- UPDATE PRODUCT ---- //
+        // PUT: api/Products/Update/5
         [HttpPut("update/{id}")]
         public ActionResult UpdateProduct(int id, Product productToUpdate)
         {
             if (id != productToUpdate.ID)
             {
-                return BadRequest(new { Error = "Parting Pets Needs A Bit More Product Information" });
+                return BadRequest(new { Error = "Parting Pets Needs A Bit More Product Information." });
             }
             var updatedProduct = _productRepository.UpdateProduct(productToUpdate);
 
@@ -75,14 +87,14 @@ namespace PartingPets.Controllers
 
 
 
-
-        // DELETE: api/ApiWithActions/5
+        // ----- DELETE PRODUCT---- //
+        // DELETE: api/Products/Delete/5
         [HttpDelete("{id}")]
         public ActionResult DeleteProduct(int id)
         {
             _productRepository.DeleteProduct(id);
 
-            return Ok("Your Parting Pets Product Has Been Deleted");
+            return Ok("Your Parting Pets Product Has Been Deleted. ;) Wink Wink.");
         }
     }
 }
