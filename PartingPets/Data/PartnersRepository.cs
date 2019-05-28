@@ -67,5 +67,28 @@ namespace PartingPets.Data
                 }
             }
         }
+
+        public Partners UpdatePartner(Partners partnerToUpdate)
+        {
+            using (var db = new SqlConnection(ConnectionString))
+            {
+                var updateQuery = @"Update Partners
+                                    Set Name = @name,
+                                    Description = @description,
+                                    Street = @street,
+                                    City = @city,
+                                    State = @state,
+                                    Zipcode = @zipcode
+                                    Where Id = @id";
+
+                var rowsAffected = db.Execute(updateQuery, partnerToUpdate);
+
+                if (rowsAffected == 1)
+                {
+                    return partnerToUpdate;
+                }
+                throw new Exception("We could not update the partner");
+            }
+        }
     }
 }

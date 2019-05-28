@@ -64,9 +64,16 @@ namespace PartingPets.Controllers
 
         // PUT: api/Partners/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public ActionResult updatePartner(int id, Partners partnerToUpdate)
         {
+            if (id != partnerToUpdate.Id)
+            {
+                return BadRequest();
+            }
+            var partner = _partnersRepository.UpdatePartner(partnerToUpdate);
+            return Ok(partner);
         }
+        
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
