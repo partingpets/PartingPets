@@ -15,15 +15,15 @@ namespace PartingPets.Data
 
         // Add Product Command //
 
-        public Product AddProduct(string name, decimal unitPrice, int categoryId, string description, bool isOnSale)
+        public Product AddProduct(string name, decimal unitPrice, int categoryId, string description, bool isOnSale, bool isDeleted)
         {
             using (var db = new SqlConnection(ConnectionString))
             {
                 var newProduct = db.QueryFirstOrDefault<Product>(@"
-                    Insert into products (name, unitPrice, categoryId, description, isOnSale)
+                    Insert into products (name, unitPrice, categoryId, description, isOnSale, isDeleted)
                     Output inserted.*
-                    Values(@name,@unitPrice,@categoryId, @description,@isOnSale)",
-                    new { name, unitPrice, categoryId, description, isOnSale });
+                    Values(@name,@unitPrice,@categoryId, @description,@isOnSale, @isDeleted)",
+                    new { name, unitPrice, categoryId, description, isOnSale, isDeleted });
 
                 if (newProduct != null)
                 {
@@ -120,7 +120,8 @@ namespace PartingPets.Data
                                 CategoryId = @categoryId,
                                 UnitPrice = @unitPrice,
                                 Description = @description,
-                                IsOnSale = @isOnSale
+                                IsOnSale = @isOnSale,
+                                IsDeleted = @isDeleted
                                 Where ID = @id";
 
                 var rowsAffected = db.Execute(updateQuery, productToUpdate);
