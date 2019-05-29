@@ -13,5 +13,6 @@ namespace PartingPets.Models
         public decimal UnitPrice { get; set; }
         public string Description { get; set; }
         public bool IsOnSale { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

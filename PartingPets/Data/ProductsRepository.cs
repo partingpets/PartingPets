@@ -41,7 +41,7 @@ namespace PartingPets.Data
         {
             using (var db = new SqlConnection(ConnectionString))
             {
-                var products = db.Query<Product>("select id, name, unitPrice, description, isOnSale from products").ToList();
+                var products = db.Query<Product>("select id, name, unitPrice, description, isOnSale from products where isDeleted = 0").ToList();
 
 
                 return products;
@@ -54,7 +54,7 @@ namespace PartingPets.Data
         {
             using (var db = new SqlConnection(ConnectionString))
             {
-                var selectedCategory = db.Query<Product>("select id, name, unitPrice, description, isOnSale from products where categoryId = @categoryId", new { categoryId });
+                var selectedCategory = db.Query<Product>("select id, name, unitPrice, description, isOnSale from products where isDeleted = 0 and categoryId = @categoryId", new { categoryId });
 
 
                 return selectedCategory;
@@ -68,7 +68,7 @@ namespace PartingPets.Data
         {
             using (var db = new SqlConnection(ConnectionString))
             {
-                var selectedPartner = db.Query<Product>("select id, name, unitPrice, description, isOnSale from products where partnerId = @partnerId", new { partnerId });
+                var selectedPartner = db.Query<Product>("select id, name, unitPrice, description, isOnSale from products where isDeleted = 0 and partnerId = @partnerId", new { partnerId });
 
 
                 return selectedPartner;
