@@ -137,7 +137,7 @@ CREATE TABLE [dbo].[Partners](
     [Street] [nvarchar](255) NOT NULL,
     [City] [nvarchar](255) NOT NULL,
     [State] [nvarchar](255) NOT NULL,
-    [Zipcode] [int] NOT NULL,
+    [Zipcode] [nvarchar](255) NOT NULL,
     [IsDeleted] [bit],
     [DateDeleted] [datetime],
 CONSTRAINT [PK_Partners] PRIMARY KEY CLUSTERED 
