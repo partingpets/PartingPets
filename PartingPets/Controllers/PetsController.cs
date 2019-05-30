@@ -40,6 +40,12 @@ namespace PartingPets.Controllers
             return Created($"api/pets/{newPet.Id}", newPet);
         }
 
+        [HttpPut]
+        public ActionResult UpdatePet(int id, Pet petToUpdate)
+        {
+
+        }
+
         public class CreatePetRequestValidator
         {
             public bool Validate(CreatePetRequest requestToValidate)
