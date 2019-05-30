@@ -36,5 +36,10 @@ namespace PartingPets.Data
                 return db.Query<Pet>("select * from pets");
             }
         }
+
+        public Pet UpdatePet(Pet petToUpdate)
+        {
+
+        }
     }
 }
