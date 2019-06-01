@@ -13,7 +13,7 @@ namespace PartingPets.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductsController : ControllerBase
+    public class ProductsController : SecureControllerBase
 
     {
         readonly ProductsRepository _productRepository;

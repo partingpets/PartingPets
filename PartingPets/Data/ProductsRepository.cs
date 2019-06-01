@@ -98,6 +98,7 @@ namespace PartingPets.Data
             using (var db = new SqlConnection(ConnectionString))
             {
                 var parameter = new { Id = ID };
+                // Doesn't actually delete from DB, it sets isDeleted to True //
                 var deleteQuery = "UPDATE products SET isDeleted = 1 WHERE id = @id";
 
                 var rowsAffected = db.Execute(deleteQuery, parameter);
