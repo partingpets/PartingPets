@@ -46,11 +46,13 @@ namespace PartingPets.Data
                                     Breed = @breed,
                                     DateOfBirth = @dateOfBirth,
                                     DateOfDeath = @dateOfDeath,
-                                    BurialStreet = @buirialStreet,
+                                    BurialStreet = @burialStreet,
                                     BurialCity = @burialCity,
                                     BurialState = @burialState,
                                     BurialZipCode = @burialZipCode,
-                                    BurialPlot = @buiralPlot";
+                                    BurialPlot = @burialPlot
+                                    Where id = @id"
+;
 
                 var rowsAffected = db.Execute(updatePetQuery, petToUpdate);
 
