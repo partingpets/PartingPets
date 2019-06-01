@@ -40,10 +40,24 @@ namespace PartingPets.Controllers
             return Created($"api/pets/{newPet.Id}", newPet);
         }
 
-        [HttpPut]
+        [HttpPut("update/{id}")]
         public ActionResult UpdatePet(int id, Pet petToUpdate)
         {
+            if (id != petToUpdate.Id)
+            {
+                return BadRequest(new { Error = "There was an authentication error with your update." });
+            }
+            var updatedPet = _petRepository.UpdatePet(petToUpdate);
 
+            return Ok(updatedPet);
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult DeletePet(int id)
+        {
+            _petRepository.DeletePet(id);
+
+            return Ok("Your pet's data has been deleted :(");
         }
 
         public class CreatePetRequestValidator
