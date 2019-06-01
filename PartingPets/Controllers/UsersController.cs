@@ -22,17 +22,18 @@ namespace PartingPets.Controllers
 
         // GET: api/User
         [HttpGet]
-        public IEnumerable<string> Get()
+        public ActionResult<User> GetAllUsers()
         {
-            return new string[] { "value1", "value2" };
+            var allUsers = _repo.GetAllUsers();
+            return Ok(allUsers);
         }
 
         // GET: api/User/5
         [HttpGet("{id}", Name = "Get")]
-        public User Get(int id)
+        public ActionResult<User> Get(int id)
         {
             var selectedUser = _repo.GetUserById(id);
-            return selectedUser;
+            return Ok(selectedUser);
         }
 
         // POST: api/User
