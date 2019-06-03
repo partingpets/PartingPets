@@ -25,7 +25,7 @@ namespace PartingPets.Controllers
 
         // GET: api/User/5
         [HttpGet("{id}", Name = "Get")]
-        public ActionResult<User> Get(int id)
+        public ActionResult<User> Get(string id)
         {
             var selectedUser = _repo.GetUserById(id);
             return Ok(selectedUser);
