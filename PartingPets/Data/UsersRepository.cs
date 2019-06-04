@@ -20,7 +20,7 @@ namespace PartingPets.Data
 
         public List<User> GetAllUsers()
         {
-            using(var db = new SqlConnection(_connectionString))
+            using (var db = new SqlConnection(_connectionString))
             {
                 var getAllUsersQuery = @"
                         SELECT id, FirstName, LastName, Street, City, State, Zipcode, Email
@@ -28,7 +28,7 @@ namespace PartingPets.Data
 
                 var allUsers = db.Query<User>(getAllUsersQuery).ToList();
 
-                if(allUsers != null)
+                if (allUsers != null)
                 {
                     return allUsers;
                 }
@@ -36,18 +36,18 @@ namespace PartingPets.Data
             throw new Exception("No users found");
         }
 
-        public User GetUserById(int id)
+        public User GetUserById(string id)
         {
-            using(var db = new SqlConnection(_connectionString))
+            using (var db = new SqlConnection(_connectionString))
             {
                 var getUserByIdQuery = @"
-                        SELECT id, FirstName, LastName, Street, City, State, Zipcode, Email
+                        SELECT id, FireBaseUid, FirstName, LastName, Street, City, State, Zipcode, Email
                         FROM [User] u
-                        WHERE u.Id = @id";
+                        WHERE u.FireBaseUid = @id";
 
                 var selectedUser = db.QueryFirstOrDefault<User>(getUserByIdQuery, new { id });
 
-                if(selectedUser != null)
+                if (selectedUser != null)
                 {
                     return selectedUser;
                 }
