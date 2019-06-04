@@ -36,14 +36,14 @@ namespace PartingPets.Data
             throw new Exception("No users found");
         }
 
-        public User GetUserById(int id)
+        public User GetUserById(string id)
         {
             using(var db = new SqlConnection(_connectionString))
             {
                 var getUserByIdQuery = @"
-                        SELECT id, FirstName, LastName, Street, City, State, Zipcode, Email
+                        SELECT id, FireBaseUid, FirstName, LastName, Street, City, State, Zipcode, Email
                         FROM [User] u
-                        WHERE u.Id = @id";
+                        WHERE u.FireBaseUid = @id";
 
                 var selectedUser = db.QueryFirstOrDefault<User>(getUserByIdQuery, new { id });
 
