@@ -28,6 +28,12 @@ namespace PartingPets.Controllers
             return Ok(_petRepository.GetAllPets());
         }
 
+        [HttpGet("{id}")]
+        public ActionResult GetPetsById(int id)
+        {
+            return Ok(_petRepository.GetMyPets(id));
+        }
+
         [HttpPost]
         public ActionResult AddPet(CreatePetRequest createRequest)
         {
