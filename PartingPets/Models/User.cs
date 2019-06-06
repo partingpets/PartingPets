@@ -10,5 +10,6 @@
         public string State { get; set; }
         public string Zipcode { get; set; }
         public string Email { get; set; }
+        public bool IsPartner { get; set; }
     }
 }

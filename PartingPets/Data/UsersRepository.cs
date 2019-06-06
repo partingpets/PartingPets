@@ -41,7 +41,7 @@ namespace PartingPets.Data
             using (var db = new SqlConnection(_connectionString))
             {
                 var getUserByIdQuery = @"
-                        SELECT id, FireBaseUid, FirstName, LastName, Street, City, State, Zipcode, Email
+                        SELECT id, FireBaseUid, FirstName, LastName, Street, City, State, Zipcode, Email, IsPartner
                         FROM [User] u
                         WHERE u.FireBaseUid = @id";
 
