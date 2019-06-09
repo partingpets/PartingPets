@@ -199,6 +199,7 @@ GO
 CREATE TABLE [dbo].[Products](
     [Id] [int] NOT NULL IDENTITY(1,1),
     [Name] [nvarchar](255) NOT NULL,
+	[ImageUrl] [nvarchar](255) NOT NULL,
     [CategoryId] [int] NOT NULL,
     [UnitPrice] [numeric](10, 2) NOT NULL,
     [PartnerID] [int],

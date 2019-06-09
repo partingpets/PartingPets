@@ -13,7 +13,7 @@ namespace PartingPets.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductsController : ControllerBase
+    public class ProductsController : SecureControllerBase
 
     {
         readonly ProductsRepository _productRepository;
@@ -33,6 +33,16 @@ namespace PartingPets.Controllers
             var products = _productRepository.GetProducts();
 
             return Ok(products);
+        }
+
+        // ----- GET ALL PRODUCT CATEGORIES ---- //
+        // GET: api/Products/Categories
+        [HttpGet("categories")]
+        public ActionResult GetProductCategories()
+        {
+            var productCategories = _productRepository.GetProductCategories();
+
+            return Ok(productCategories);
         }
 
         // ----- GET ALL PRODUCTS BY CATEGORY ID ---- //

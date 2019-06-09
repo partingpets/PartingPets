@@ -48,8 +48,21 @@ namespace PartingPets.Data
             }
         }
 
+        // Get All Product Categories //
+
+        public IEnumerable<ProductCategory> GetProductCategories()
+        {
+            using (var db = new SqlConnection(ConnectionString))
+            {
+                var productCategories = db.Query<ProductCategory>("select * from productCategory").ToList();
+
+
+                return productCategories;
+            }
+        }
+
         // Get Products By CategoryId //
-        
+
         public IEnumerable<Product> GetProductsByCategory(int categoryId)
         {
             using (var db = new SqlConnection(ConnectionString))
