@@ -49,6 +49,7 @@ namespace PartingPets.Controllers
         [HttpPost]
         public ActionResult<CreateUserRequest> CreateUser([FromBody] CreateUserRequest newUserObject)
         {
+            newUserObject.FireBaseUid = UserId;
             if(!_validator.Validate(newUserObject))
             {
                 return BadRequest(new { error = "User object validation failed " });

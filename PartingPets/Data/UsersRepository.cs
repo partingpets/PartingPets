@@ -54,11 +54,14 @@ namespace PartingPets.Data
                             FireBaseUid,
                             FirstName,
                             LastName,
-                            Street,
+                            Street1,
+                            Street2,
                             City,
                             State,
                             Zipcode,
-                            Email
+                            Email,
+                            IsPartner,
+                            PartnerID
                         FROM [User] u
                         WHERE u.FireBaseUid = @id";
 
@@ -77,16 +80,17 @@ namespace PartingPets.Data
             using(var db = new SqlConnection(_connectionString))
             {
                 var newUserQuery = @"
-                        INSERT INTO [User] (FireBaseUid, FirstName, LastName, Street, City, State, ZipCode, Email, IsPartner, IsDeleted, DateCreated)
+                        INSERT INTO [User] (FireBaseUid, FirstName, LastName, Street1, Street2, City, State, ZipCode, Email, IsPartner, IsDeleted, DateCreated)
                         OUTPUT Inserted.*
-                            VALUES(@FireBaseUid, @FirstName, @LastName, @Street, @City, @State, @ZipCode, @Email, @IsPartner, @IsDeleted, GETUTCDATE())";
+                            VALUES(@FireBaseUid, @FirstName, @LastName, @Street1, @Street2, @City, @State, @ZipCode, @Email, @IsPartner, @IsDeleted, GETUTCDATE())";
 
                 var newUser = db.QueryFirstOrDefault<User>(newUserQuery, new
                 {
                     newUserObj.FireBaseUid,
                     newUserObj.FirstName,
                     newUserObj.LastName,
-                    newUserObj.Street,
+                    newUserObj.Street1,
+                    newUserObj.Street2,
                     newUserObj.City,
                     newUserObj.State,
                     newUserObj.Zipcode,
