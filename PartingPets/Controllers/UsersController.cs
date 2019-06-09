@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PartingPets.Data;
 using PartingPets.Models;
+using PartingPets.Validators;
 
 namespace PartingPets.Controllers
 {
@@ -9,10 +10,13 @@ namespace PartingPets.Controllers
     public class UsersController : SecureControllerBase
     {
         readonly UsersRepository _repo;
+        readonly UserRequestValidator _validator;
 
         public UsersController(UsersRepository repo)
         {
             _repo = repo;
+            _validator = new UserRequestValidator();
+
         }
 
         // GET: api/User
@@ -27,14 +31,33 @@ namespace PartingPets.Controllers
         [HttpGet("{id}", Name = "Get")]
         public ActionResult<User> Get(string id)
         {
-            var selectedUser = _repo.GetUserById(id);
-            return Ok(selectedUser);
+
+            try
+            {
+                var selectedUser = _repo.GetUserById(id);
+                return Ok(selectedUser);
+            }
+            catch(System.Exception)
+            {
+
+                return NotFound();
+            }
+
         }
 
         // POST: api/User
         [HttpPost]
-        public void Post([FromBody] string value)
+        public ActionResult<CreateUserRequest> CreateUser([FromBody] CreateUserRequest newUserObject)
         {
+            newUserObject.FireBaseUid = UserId;
+            if(!_validator.Validate(newUserObject))
+            {
+                return BadRequest(new { error = "User object validation failed " });
+            }
+
+            var newUser = _repo.AddNewUser(newUserObject);
+
+            return Ok(newUser);
         }
 
         // PUT: api/User/5

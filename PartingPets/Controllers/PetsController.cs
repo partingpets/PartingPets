@@ -11,7 +11,7 @@ namespace PartingPets.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PetsController : ControllerBase
+    public class PetsController : SecureControllerBase
     {
         readonly PetRepository _petRepository;
         readonly CreatePetRequestValidator _validator;
@@ -26,6 +26,12 @@ namespace PartingPets.Controllers
         public ActionResult GetAllPets()
         {
             return Ok(_petRepository.GetAllPets());
+        }
+
+        [HttpGet("{id}")]
+        public ActionResult GetPetsById(int id)
+        {
+            return Ok(_petRepository.GetMyPets(id));
         }
 
         [HttpPost]

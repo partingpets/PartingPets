@@ -20,15 +20,23 @@ namespace PartingPets.Data
 
         public List<User> GetAllUsers()
         {
-            using (var db = new SqlConnection(_connectionString))
+            using(var db = new SqlConnection(_connectionString))
             {
                 var getAllUsersQuery = @"
-                        SELECT id, FirstName, LastName, Street, City, State, Zipcode, Email
+                        SELECT
+                            id,
+                            FirstName,
+                            LastName,
+                            Street,
+                            City,
+                            State,
+                            Zipcode,
+                            Email
                         FROM [User]";
 
                 var allUsers = db.Query<User>(getAllUsersQuery).ToList();
 
-                if (allUsers != null)
+                if(allUsers != null)
                 {
                     return allUsers;
                 }
@@ -38,21 +46,65 @@ namespace PartingPets.Data
 
         public User GetUserById(string id)
         {
-            using (var db = new SqlConnection(_connectionString))
+            using(var db = new SqlConnection(_connectionString))
             {
                 var getUserByIdQuery = @"
-                        SELECT id, FireBaseUid, FirstName, LastName, Street, City, State, Zipcode, Email, IsPartner
+                        SELECT 
+                            id,
+                            FireBaseUid,
+                            FirstName,
+                            LastName,
+                            Street1,
+                            Street2,
+                            City,
+                            State,
+                            Zipcode,
+                            Email,
+                            IsPartner,
+                            PartnerID
                         FROM [User] u
                         WHERE u.FireBaseUid = @id";
 
                 var selectedUser = db.QueryFirstOrDefault<User>(getUserByIdQuery, new { id });
 
-                if (selectedUser != null)
+                if(selectedUser != null)
                 {
                     return selectedUser;
                 }
             }
             throw new Exception("User not found");
+        }
+
+        public User AddNewUser(CreateUserRequest newUserObj)
+        {
+            using(var db = new SqlConnection(_connectionString))
+            {
+                var newUserQuery = @"
+                        INSERT INTO [User] (FireBaseUid, FirstName, LastName, Street1, Street2, City, State, ZipCode, Email, IsPartner, IsDeleted, DateCreated)
+                        OUTPUT Inserted.*
+                            VALUES(@FireBaseUid, @FirstName, @LastName, @Street1, @Street2, @City, @State, @ZipCode, @Email, @IsPartner, @IsDeleted, GETUTCDATE())";
+
+                var newUser = db.QueryFirstOrDefault<User>(newUserQuery, new
+                {
+                    newUserObj.FireBaseUid,
+                    newUserObj.FirstName,
+                    newUserObj.LastName,
+                    newUserObj.Street1,
+                    newUserObj.Street2,
+                    newUserObj.City,
+                    newUserObj.State,
+                    newUserObj.Zipcode,
+                    newUserObj.Email,
+                    newUserObj.IsPartner,
+                    newUserObj.IsDeleted
+                });
+
+                if(newUser != null)
+                {
+                    return newUser;
+                }
+            }
+            throw new Exception("User not Created");
         }
     }
 }
