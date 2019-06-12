@@ -84,7 +84,7 @@ namespace PartingPets.Controllers
                 return BadRequest(new { error = "Parting Pets Requests You Fill All Necessary Fields." });
             }
 
-            var newProduct = _productRepository.AddProduct(createRequest.Name, createRequest.UnitPrice, createRequest.CategoryId, createRequest.Description, createRequest.IsOnSale, createRequest.IsDeleted);
+            var newProduct = _productRepository.AddProduct(createRequest);
 
             return Created($"api/products/{newProduct.ID}", newProduct);
         }

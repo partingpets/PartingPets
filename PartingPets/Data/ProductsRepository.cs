@@ -15,15 +15,43 @@ namespace PartingPets.Data
 
         // Add Product Command //
 
-        public Product AddProduct(string name, decimal unitPrice, int categoryId, string description, bool isOnSale, bool isDeleted)
+        //public Product AddProduct(string name, decimal unitPrice, int categoryId, string description, bool isOnSale, bool isDeleted)
+        //{
+        //    using (var db = new SqlConnection(ConnectionString))
+        //    {
+        //        var newProduct = db.QueryFirstOrDefault<Product>(@"
+        //            Insert into products (name, unitPrice, categoryId, description, isOnSale, isDeleted)
+        //            Output inserted.*
+        //            Values(@name,@unitPrice,@categoryId, @description,@isOnSale, @isDeleted)",
+        //            new { name, unitPrice, categoryId, description, isOnSale, isDeleted });
+
+        //        if (newProduct != null)
+        //        {
+        //            return newProduct;
+        //        }
+        //    }
+
+        //    throw new Exception("Sorry. No Parting Pets Product Was Created.");
+        //}
+
+
+        public Product AddProduct(CreateProductRequest createRequest)
         {
+            createRequest.UnitPrice = System.Convert.ToDecimal(createRequest.UnitPrice);
             using (var db = new SqlConnection(ConnectionString))
             {
                 var newProduct = db.QueryFirstOrDefault<Product>(@"
                     Insert into products (name, unitPrice, categoryId, description, isOnSale, isDeleted)
                     Output inserted.*
                     Values(@name,@unitPrice,@categoryId, @description,@isOnSale, @isDeleted)",
-                    new { name, unitPrice, categoryId, description, isOnSale, isDeleted });
+                    new {
+                        createRequest.Name,
+                        createRequest.UnitPrice,
+                        createRequest.CategoryId,
+                        createRequest.Description,
+                        createRequest.IsOnSale,
+                        createRequest.IsDeleted
+                    });
 
                 if (newProduct != null)
                 {
