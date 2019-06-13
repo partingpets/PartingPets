@@ -41,16 +41,17 @@ namespace PartingPets.Data
             using (var db = new SqlConnection(ConnectionString))
             {
                 var newProduct = db.QueryFirstOrDefault<Product>(@"
-                    Insert into products (name, unitPrice, categoryId, description, isOnSale, isDeleted)
+                    Insert into products (name, unitPrice, categoryId, description, isOnSale, isDeleted, partnerId)
                     Output inserted.*
-                    Values(@name,@unitPrice,@categoryId, @description,@isOnSale, @isDeleted)",
+                    Values(@name,@unitPrice,@categoryId, @description,@isOnSale, @isDeleted, @partnerId)",
                     new {
                         createRequest.Name,
                         createRequest.UnitPrice,
                         createRequest.CategoryId,
                         createRequest.Description,
                         createRequest.IsOnSale,
-                        createRequest.IsDeleted
+                        createRequest.IsDeleted,
+                        createRequest.PartnerId
                     });
 
                 if (newProduct != null)
