@@ -25,13 +25,17 @@ namespace PartingPets.Data
                 var getAllUsersQuery = @"
                         SELECT
                             id,
+                            FireBaseUid,
                             FirstName,
                             LastName,
-                            Street,
+                            Street1,
+                            Street2,
                             City,
                             State,
                             Zipcode,
-                            Email
+                            Email,
+                            IsPartner,
+                            PartnerID
                         FROM [User]";
 
                 var allUsers = db.Query<User>(getAllUsersQuery).ToList();
