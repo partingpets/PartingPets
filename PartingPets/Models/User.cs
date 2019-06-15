@@ -14,5 +14,6 @@
         public string Email { get; set; }
         public bool IsPartner { get; set; }
         public int PartnerId { get; set; }
+        public bool IsAdmin { get; set; }
     }
 }
