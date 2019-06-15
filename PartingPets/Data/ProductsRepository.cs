@@ -70,7 +70,7 @@ namespace PartingPets.Data
         {
             using (var db = new SqlConnection(ConnectionString))
             {
-                var products = db.Query<Product>("select id, name, unitPrice, description, isOnSale from products where isDeleted = 0").ToList();
+                var products = db.Query<Product>("select id, name, unitPrice, description, categoryId, isOnSale from products where isDeleted = 0").ToList();
 
 
                 return products;

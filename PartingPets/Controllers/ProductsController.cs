@@ -57,7 +57,7 @@ namespace PartingPets.Controllers
 
         // ----- GET ALL PRODUCTS BY PARTNER ID ---- //
         // GET: api/Products/Partners/3
-        [HttpGet("partners/{partnerId}")]
+        [HttpGet("partner/{partnerId}")]
         public ActionResult GetProductsByPartner(int partnerId)
         {
             var selectedPartner = _productRepository.GetProductsByPartner(partnerId);
