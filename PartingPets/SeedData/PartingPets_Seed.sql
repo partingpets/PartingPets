@@ -202,6 +202,7 @@ GO
 CREATE TABLE [dbo].[Products](
     [Id] [int] NOT NULL IDENTITY(1,1),
     [Name] [nvarchar](255) NOT NULL,
+	[ImageUrl] [nvarchar](255) NOT NULL,
     [CategoryId] [int] NOT NULL,
     [UnitPrice] [numeric](10, 2) NOT NULL,
     [PartnerID] [int],
@@ -344,16 +345,16 @@ USE PartingPets
     INSERT INTO [dbo].[ProductCategory] ([Name], [Type]) VALUES ('Candle','Product')
 
 USE PartingPets
-    INSERT INTO [dbo].[Products] ([Name], [CategoryId], [UnitPrice], [PartnerID], [Description], [IsOnSale], [IsDeleted]) VALUES ('Modern Casket', 1, 100.00, 3, 'The perfect size casket for any cat or small dog', 0, 1)
-    INSERT INTO [dbo].[Products] ([Name], [CategoryId], [UnitPrice], [PartnerID], [Description], [IsOnSale], [IsDeleted]) VALUES ('Kosher Cremation', 6, 276.99, 6, 'The most civilised and affordable cremation', 0, 0)
-    INSERT INTO [dbo].[Products] ([Name], [CategoryId], [UnitPrice], [PartnerID], [Description], [IsOnSale], [IsDeleted]) VALUES ('New Casket Smell Candle', 9, 9.99, null, 'Never forget the smell of the final resting place of your pet', 0, 0)
-    INSERT INTO [dbo].[Products] ([Name], [CategoryId], [UnitPrice], [PartnerID], [Description], [IsOnSale], [IsDeleted]) VALUES ('Silver Burial Service', 7, 129.99, 11, 'Burial service that includes your pets favorite toys', 0, 0)
-    INSERT INTO [dbo].[Products] ([Name], [CategoryId], [UnitPrice], [PartnerID], [Description], [IsOnSale], [IsDeleted]) VALUES ('Gold inlaid Urn', 2, 29.99, null, 'A glorious urn with 8 karat gold inlaid', 0, 0)
-    INSERT INTO [dbo].[Products] ([Name], [CategoryId], [UnitPrice], [PartnerID], [Description], [IsOnSale], [IsDeleted]) VALUES ('Reclaimed Wood 5x7 Frame', 5, 19.99, null, 'Stunning 5x7 reclaimed wooden frame for lasting memories', 0, 0)
-    INSERT INTO [dbo].[Products] ([Name], [CategoryId], [UnitPrice], [PartnerID], [Description], [IsOnSale], [IsDeleted]) VALUES ('Locket of Memories', 4, 14.99, null, 'Two sided locket to hold photos of you and your pet', 0, 0)
-    INSERT INTO [dbo].[Products] ([Name], [CategoryId], [UnitPrice], [PartnerID], [Description], [IsOnSale], [IsDeleted]) VALUES ('Photo Tee', 3, 29.99, null, '100% Egyption Cotton Tee with a picture of your pet', 0, 0)
-    INSERT INTO [dbo].[Products] ([Name], [CategoryId], [UnitPrice], [PartnerID], [Description], [IsOnSale], [IsDeleted]) VALUES ('2 Gun Funeral Salute', 8, 59.99, 7, 'Send your pet off right with a gun salute', 1, 0)
-    INSERT INTO [dbo].[Products] ([Name], [CategoryId], [UnitPrice], [PartnerID], [Description], [IsOnSale], [IsDeleted]) VALUES ('Gold Burial Service', 7, 179.99, 11, 'Burial service that includes Silver service plus a gun salute', 0, 0)
+    INSERT INTO [dbo].[Products] ([Name], [ImageUrl], [CategoryId], [UnitPrice], [PartnerID], [Description], [IsOnSale], [IsDeleted]) VALUES ('Modern Casket', 'http://intuitiveconsumer.com/blog/wp-content/uploads/2015/05/new-product.png', 1, 100.00, 3, 'The perfect size casket for any cat or small dog', 0, 1)
+    INSERT INTO [dbo].[Products] ([Name], [ImageUrl], [CategoryId], [UnitPrice], [PartnerID], [Description], [IsOnSale], [IsDeleted]) VALUES ('Kosher Cremation', 'http://intuitiveconsumer.com/blog/wp-content/uploads/2015/05/new-product.png', 6, 276.99, 6, 'The most civilised and affordable cremation', 0, 0)
+    INSERT INTO [dbo].[Products] ([Name], [ImageUrl], [CategoryId], [UnitPrice], [PartnerID], [Description], [IsOnSale], [IsDeleted]) VALUES ('New Casket Smell Candle', 'http://intuitiveconsumer.com/blog/wp-content/uploads/2015/05/new-product.png', 9, 9.99, null, 'Never forget the smell of the final resting place of your pet', 0, 0)
+    INSERT INTO [dbo].[Products] ([Name], [ImageUrl], [CategoryId], [UnitPrice], [PartnerID], [Description], [IsOnSale], [IsDeleted]) VALUES ('Silver Burial Service', 'http://intuitiveconsumer.com/blog/wp-content/uploads/2015/05/new-product.png', 7, 129.99, 11, 'Burial service that includes your pets favorite toys', 0, 0)
+    INSERT INTO [dbo].[Products] ([Name], [ImageUrl], [CategoryId], [UnitPrice], [PartnerID], [Description], [IsOnSale], [IsDeleted]) VALUES ('Gold inlaid Urn', 'http://intuitiveconsumer.com/blog/wp-content/uploads/2015/05/new-product.png', 2, 29.99, null, 'A glorious urn with 8 karat gold inlaid', 0, 0)
+    INSERT INTO [dbo].[Products] ([Name], [ImageUrl], [CategoryId], [UnitPrice], [PartnerID], [Description], [IsOnSale], [IsDeleted]) VALUES ('Locket of Memories', 'http://intuitiveconsumer.com/blog/wp-content/uploads/2015/05/new-product.png', 4, 14.99, null, 'Two sided locket to hold photos of you and your pet', 0, 0)
+    INSERT INTO [dbo].[Products] ([Name], [ImageUrl], [CategoryId], [UnitPrice], [PartnerID], [Description], [IsOnSale], [IsDeleted]) VALUES ('Photo Tee', 'http://intuitiveconsumer.com/blog/wp-content/uploads/2015/05/new-product.png', 3, 29.99, null, '100% Egyption Cotton Tee with a picture of your pet', 0, 0)
+    INSERT INTO [dbo].[Products] ([Name], [ImageUrl], [CategoryId], [UnitPrice], [PartnerID], [Description], [IsOnSale], [IsDeleted]) VALUES ('2 Gun Funeral Salute', 'http://intuitiveconsumer.com/blog/wp-content/uploads/2015/05/new-product.png', 8, 59.99, 7, 'Send your pet off right with a gun salute', 1, 0)
+    INSERT INTO [dbo].[Products] ([Name], [ImageUrl], [CategoryId], [UnitPrice], [PartnerID], [Description], [IsOnSale], [IsDeleted]) VALUES ('Gold Burial Service', 'http://intuitiveconsumer.com/blog/wp-content/uploads/2015/05/new-product.png', 7, 179.99, 11, 'Burial service that includes Silver service plus a gun salute', 0, 0)
+    INSERT INTO [dbo].[Products] ([Name], [ImageUrl], [CategoryId], [UnitPrice], [PartnerID], [Description], [IsOnSale], [IsDeleted]) VALUES ('Reclaimed Wood 5x7 Frame', 'http://intuitiveconsumer.com/blog/wp-content/uploads/2015/05/new-product.png', 5, 19.99, null, 'Stunning 5x7 reclaimed wooden frame for lasting memories', 0, 0)
    
 USE PartingPets
     INSERT INTO [dbo].[Invoice] ([PaymentTypeId], [UserID], [BillingStreet], [BillingCity], [BillingState], [BillingZip], [Total]) VALUES (1, 1, '4979 Collier Walks','New Martineton','Maine','66888', 119.98)
