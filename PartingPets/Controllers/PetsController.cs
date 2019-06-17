@@ -41,7 +41,7 @@ namespace PartingPets.Controllers
             {
                 return BadRequest(new { error = "pets must have a name, user Id, breed, date of birth, and date of death." });
             }
-            var newPet = _petRepository.AddPet(createRequest.Name, createRequest.UserId, createRequest.Breed, createRequest.DateOfBirth, createRequest.DateOfDeath);
+            var newPet = _petRepository.AddPet(createRequest.Name, createRequest.UserId, createRequest.Breed, createRequest.DateOfBirth, createRequest.DateOfDeath, createRequest.BurialStreet, createRequest.BurialCity, createRequest.BurialState, createRequest.BurialZipCode, createRequest.BurialPlot );
 
             return Created($"api/pets/{newPet.Id}", newPet);
         }

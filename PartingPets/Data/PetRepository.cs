@@ -12,14 +12,14 @@ namespace PartingPets.Data
     {
         const string ConnectionString = "Server=localhost; Database=PartingPets; Trusted_Connection=True;";
 
-        public Pet AddPet(string name, int userId, string breed, DateTime dateOfBirth, DateTime dateOfDeath)
+        public Pet AddPet(string name, int userId, string breed, DateTime dateOfBirth, DateTime dateOfDeath, string burialStreet, string burialCity, string burialState, int burialZipCode, string burialPlot)
         {
             using (var db = new SqlConnection(ConnectionString))
             {
-                var newPetQuery = db.QueryFirstOrDefault<Pet>(@"Insert into pets (name, userId, breed, dateOfBirth, dateOfDeath)
+                var newPetQuery = db.QueryFirstOrDefault<Pet>(@"Insert into pets (name, userId, breed, dateOfBirth, dateOfDeath, burialStreet, burialCity, burialState, burialZipCode, burialPlot)
                                                         Output inserted.*
-                                                        Values(@name,@userId,@breed,@dateOfBirth,@dateOfDeath)",
-                    new { name, userId, breed, dateOfBirth, dateOfDeath });
+                                                        Values(@name,@userId,@breed,@dateOfBirth,@dateOfDeath,@burialStreet,@burialCity,@burialState,@burialZipCode,@burialPlot)",
+                    new { name, userId, breed, dateOfBirth, dateOfDeath, burialStreet, burialCity, burialState, burialZipCode, burialPlot });
                 if (newPetQuery != null)
                 {
                     return newPetQuery;
