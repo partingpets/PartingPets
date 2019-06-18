@@ -45,6 +45,14 @@ namespace PartingPets.Data
             }
         }
 
+        public Pet GetSinglePet(int id)
+        {
+            using (var db = new SqlConnection(ConnectionString))
+            {
+                return db.QueryFirstOrDefault<Pet>("select * from pets where pets.id = @id", new { id });
+            }
+        }
+
         public Pet UpdatePet(Pet petToUpdate)
         {
             using (var db = new SqlConnection(ConnectionString))
