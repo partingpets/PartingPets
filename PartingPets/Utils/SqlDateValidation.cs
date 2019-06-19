@@ -4,6 +4,7 @@ namespace PartingPets.Utils
 {
     public class SqlDateValidation
     {
+        // https://stackoverflow.com/questions/7054782/validate-datetime-before-inserting-it-into-sql-server-database
         /// <summary>
         /// An method to verify whether a value is 
         /// kosher for SQL Server datetime. 
