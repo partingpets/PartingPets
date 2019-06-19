@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace PartingPets.Utils
 {
@@ -30,10 +27,6 @@ namespace PartingPets.Utils
 
                 // no need to do anything, this is the expected out of range error
             }
-            //if(DateTime.TryParse(dateToCheck, out testDate))
-            //{
-                
-            //}
 
             return valid;
         }

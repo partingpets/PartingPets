@@ -1,12 +1,11 @@
 ﻿using Dapper;
 using Microsoft.Extensions.Options;
 using PartingPets.Models;
+using PartingPets.Utils;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using PartingPets.Utils;
-using System.Threading.Tasks;
 
 namespace PartingPets.Data
 {
