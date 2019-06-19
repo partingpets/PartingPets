@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace PartingPets.Models
 {
-    public class User
+    public class EditUserRequest
     {
         public int Id { get; set; }
         public string FireBaseUid { get; set; }
@@ -15,10 +18,11 @@ namespace PartingPets.Models
         public string Zipcode { get; set; }
         public string Email { get; set; }
         public bool IsPartner { get; set; }
-        public int PartnerId { get; set; }
+        public string PartnerId { get; set; }
         public bool IsAdmin { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime DateDeleted { get; set; }
         public bool IsDeleted { get; set; }
+        
     }
 }

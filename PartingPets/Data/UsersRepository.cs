@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using PartingPets.Utils;
 using System.Threading.Tasks;
 
 namespace PartingPets.Data
@@ -12,10 +13,12 @@ namespace PartingPets.Data
     public class UsersRepository
     {
         readonly string _connectionString;
+        readonly SqlDateValidation _sqlDateValidator;
 
         public UsersRepository(IOptions<DbConfiguration> dbConfig)
         {
             _connectionString = dbConfig.Value.ConnectionString;
+            _sqlDateValidator = new SqlDateValidation();
         }
 
         public List<User> GetAllUsers()
@@ -52,21 +55,22 @@ namespace PartingPets.Data
         {
             using(var db = new SqlConnection(_connectionString))
             {
+                //id,
+                //FireBaseUid,
+                //FirstName,
+                //LastName,
+                //Street1,
+                //Street2,
+                //City,
+                //State,
+                //Zipcode,
+                //Email,
+                //IsPartner,
+                //PartnerID,
+                //IsAdmin
                 var getUserByIdQuery = @"
                         SELECT 
-                            id,
-                            FireBaseUid,
-                            FirstName,
-                            LastName,
-                            Street1,
-                            Street2,
-                            City,
-                            State,
-                            Zipcode,
-                            Email,
-                            IsPartner,
-                            PartnerID,
-                            IsAdmin
+                            *
                         FROM [User] u
                         WHERE u.FireBaseUid = @id";
 
@@ -110,6 +114,57 @@ namespace PartingPets.Data
                 }
             }
             throw new Exception("User not Created");
+        }
+
+        public EditUserRequest UpdateUser(EditUserRequest updatedUserObj)
+        {
+            //if(updatedUserObj.IsPartner == false)
+            //{
+            //    updatedUserObj.PartnerId = "";
+            //}
+
+            // Validate our dates to check that they are valid ranges of dates for SQL server
+
+            if(!_sqlDateValidator.IsValidSqlDateTime(updatedUserObj.DateDeleted))
+            {
+                //var stdDateTime = new DateTime();
+                updatedUserObj.DateDeleted = DateTime.Parse("1800-01-01T00:00:00");
+                //0001-01-01T00: 00:00
+            }
+
+            using(var db = new SqlConnection(_connectionString))
+            {
+                var editUserQuery = @"
+                    UPDATE 
+                      [User] 
+                    SET 
+                      [FireBaseUid] = @firebaseUid, 
+                      [FirstName] = @firstName, 
+                      [LastName] = @lastName, 
+                      [Street1] = @street1, 
+                      [Street2] = @street2, 
+                      [City] = @city, 
+                      [State] = @state, 
+                      [ZipCode] = @zipCode, 
+                      [Email] = @email, 
+                      [IsPartner] = @isPartner, 
+                      [PartnerID] = @partnerId, 
+                      [IsAdmin] = @isAdmin, 
+                      [DateCreated] = @dateCreated, 
+                      [DateDeleted] = @dateDeleted, 
+                      [IsDeleted] = @isDeleted 
+                    WHERE 
+                      id = @id";
+
+                var rowsAffected = db.Execute(editUserQuery, updatedUserObj);
+
+                if(rowsAffected == 1)
+                {
+                    return updatedUserObj;
+                }
+                throw new Exception("Could not update user");
+               
+            }
         }
     }
 }

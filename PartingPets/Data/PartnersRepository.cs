@@ -16,14 +16,14 @@ namespace PartingPets.Data
         {
             using (var db = new SqlConnection(ConnectionString))
             {
-                var partners = db.Query<Partners>("select id, name, description, street, city, state, zipcode, isdeleted, datedeleted from partners").ToList();
+                var partners = db.Query<Partners>("select id, name, description, registrationCode, street, city, state, zipcode, isdeleted, datedeleted from partners").ToList();
                 return partners;
             }
         }
 
         public Partners GetPartner(int id)
         {
-            var sql = "select id, name, description, street, city, state, zipcode, isdeleted, datedeleted from partners where Id = @id;";
+            var sql = "select id, name, description, registrationCode,  street, city, state, zipcode, isdeleted, datedeleted from partners where Id = @id;";
             using (var db = new SqlConnection(ConnectionString))
             {
                 var partner = db.QueryFirstOrDefault<Partners>(sql, new { id });
