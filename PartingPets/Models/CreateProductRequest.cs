@@ -8,6 +8,7 @@ namespace PartingPets.Models
     public class CreateProductRequest
     {
         public string Name { get; set; } 
+        public string ImageUrl { get; set; }
         public decimal UnitPrice { get; set; }
         public int CategoryId { get; set; }
         public string Description { get; set; }
