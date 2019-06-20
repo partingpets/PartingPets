@@ -65,7 +65,8 @@ namespace PartingPets.Data
                             Zipcode,
                             Email,
                             IsPartner,
-                            PartnerID
+                            PartnerID,
+                            IsAdmin 
                         FROM [User] u
                         WHERE u.FireBaseUid = @id";
 
