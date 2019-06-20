@@ -40,6 +40,18 @@ namespace PartingPets.Controllers
             return Ok(partner);
         }
 
+        // GET: api/Partners/Code/8uyuy6y
+        [HttpGet("Code/{registrationCode}", Name = "GetPartnerByPartnerCode")]
+        public ActionResult GetPartnerByRegistrationCode(string registrationCode)
+        {
+            var partner = _partnersRepository.GetPartnerCode(registrationCode);
+            if(partner == null)
+            {
+                return NotFound();
+            }
+            return Ok(partner);
+        }
+
         // POST: api/Partners
         [HttpPost]
         public ActionResult AddPartner(CreatePartnerRequest createRequest)

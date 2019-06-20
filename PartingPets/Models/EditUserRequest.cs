@@ -20,6 +20,5 @@ namespace PartingPets.Models
         public DateTime DateCreated { get; set; }
         public DateTime DateDeleted { get; set; }
         public bool IsDeleted { get; set; }
-        
     }
 }

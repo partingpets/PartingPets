@@ -31,6 +31,34 @@ namespace PartingPets.Data
             }
         }
 
+        public string GetPartnerCode(string RegistrationCode)
+        {
+            using(var db = new SqlConnection(ConnectionString))
+            {
+                var getPartnerCodeQuery = @"
+                SELECT 
+                    RegistrationCode
+                FROM
+                    [Partners] p
+                WHERE
+                    p.RegistrationCode = @RegistrationCode";
+
+                var partnerCode = db.QueryFirstOrDefault<string>(getPartnerCodeQuery, new { RegistrationCode });
+
+                if(partnerCode != null)
+                {
+                    return partnerCode;
+                }
+                else
+                {
+                    return null;
+                }
+
+            }
+            throw new Exception("Partner registration code not found");
+                
+        }
+
         public Partners AddPartner(string name, string description, string street, string city, string state, string zipcode)
         {
             using (var db = new SqlConnection(ConnectionString))

@@ -117,19 +117,21 @@ namespace PartingPets.Data
 
         public EditUserRequest UpdateUser(EditUserRequest updatedUserObj)
         {
-            //if(updatedUserObj.IsPartner == false)
-            //{
-            //    updatedUserObj.PartnerId = "";
-            //}
+            // Handle the deleted user field sa we set it to Null in the DB if not set. Dot Net will pass in 1/1/0001 if set to null and SQL do not like
+            if(updatedUserObj.IsPartner == false)
+            {
+                updatedUserObj.PartnerId = null;
+            }
 
             // Validate our dates to check that they are valid ranges of dates for SQL server
-
             if(!_sqlDateValidator.IsValidSqlDateTime(updatedUserObj.DateDeleted))
             {
-                //var stdDateTime = new DateTime();
+                // Value is not valid or null so set to a valid SQL date
+                // Struggled with setting this to Null so this will work for now
                 updatedUserObj.DateDeleted = DateTime.Parse("1800-01-01T00:00:00");
                 //0001-01-01T00: 00:00
             }
+
 
             using(var db = new SqlConnection(_connectionString))
             {
@@ -162,7 +164,7 @@ namespace PartingPets.Data
                     return updatedUserObj;
                 }
                 throw new Exception("Could not update user");
-               
+
             }
         }
     }
