@@ -31,23 +31,23 @@ namespace PartingPets.Data
             }
         }
 
-        public string GetPartnerCode(string RegistrationCode)
+        public Partners GetPartnerCode(string RegistrationCode)
         {
             using(var db = new SqlConnection(ConnectionString))
             {
                 var getPartnerCodeQuery = @"
                 SELECT 
-                    RegistrationCode
+                    Id, RegistrationCode
                 FROM
                     [Partners] p
                 WHERE
                     p.RegistrationCode = @RegistrationCode";
 
-                var partnerCode = db.QueryFirstOrDefault<string>(getPartnerCodeQuery, new { RegistrationCode });
+                var partner = db.QueryFirstOrDefault<Partners>(getPartnerCodeQuery, new { RegistrationCode });
 
-                if(partnerCode != null)
+                if(partner != null)
                 {
-                    return partnerCode;
+                    return partner;
                 }
                 else
                 {
