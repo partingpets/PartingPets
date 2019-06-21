@@ -13,17 +13,26 @@ namespace PartingPets.Data
     {
         const string ConnectionString = "Server = localhost; Database = PartingPets; Trusted_Connection = True;";
 
-        // Add Product Command //
 
-        public Product AddProduct(string name, decimal unitPrice, int categoryId, string description, bool isOnSale, bool isDeleted)
+        public Product AddProduct(CreateProductRequest createRequest)
         {
+            createRequest.UnitPrice = System.Convert.ToDecimal(createRequest.UnitPrice);
             using (var db = new SqlConnection(ConnectionString))
             {
                 var newProduct = db.QueryFirstOrDefault<Product>(@"
-                    Insert into products (name, unitPrice, categoryId, description, isOnSale, isDeleted)
+                    Insert into products (name, imageUrl, unitPrice, categoryId, description, isOnSale, isDeleted, partnerId)
                     Output inserted.*
-                    Values(@name,@unitPrice,@categoryId, @description,@isOnSale, @isDeleted)",
-                    new { name, unitPrice, categoryId, description, isOnSale, isDeleted });
+                    Values(@name, @imageUrl, @unitPrice,@categoryId, @description,@isOnSale, @isDeleted, @partnerId)",
+                    new {
+                        createRequest.Name,
+                        createRequest.ImageUrl,
+                        createRequest.UnitPrice,
+                        createRequest.CategoryId,
+                        createRequest.Description,
+                        createRequest.IsOnSale,
+                        createRequest.IsDeleted,
+                        createRequest.PartnerId
+                    });
 
                 if (newProduct != null)
                 {
@@ -41,20 +50,33 @@ namespace PartingPets.Data
         {
             using (var db = new SqlConnection(ConnectionString))
             {
-                var products = db.Query<Product>("select id, name, unitPrice, description, isOnSale from products where isDeleted = 0").ToList();
+                var products = db.Query<Product>("select id, name, imageUrl, unitPrice, description, categoryId, isOnSale from products where isDeleted = 0").ToList();
 
 
                 return products;
             }
         }
 
+        // Get All Product Categories //
+
+        public IEnumerable<ProductCategory> GetProductCategories()
+        {
+            using (var db = new SqlConnection(ConnectionString))
+            {
+                var productCategories = db.Query<ProductCategory>("select * from productCategory").ToList();
+
+
+                return productCategories;
+            }
+        }
+
         // Get Products By CategoryId //
-        
+
         public IEnumerable<Product> GetProductsByCategory(int categoryId)
         {
             using (var db = new SqlConnection(ConnectionString))
             {
-                var selectedCategory = db.Query<Product>("select id, name, unitPrice, description, isOnSale from products where isDeleted = 0 and categoryId = @categoryId", new { categoryId });
+                var selectedCategory = db.Query<Product>("select id, name, imageUrl, unitPrice, description, isOnSale from products where isDeleted = 0 and categoryId = @categoryId", new { categoryId });
 
 
                 return selectedCategory;
@@ -68,7 +90,7 @@ namespace PartingPets.Data
         {
             using (var db = new SqlConnection(ConnectionString))
             {
-                var selectedPartner = db.Query<Product>("select id, name, unitPrice, description, isOnSale from products where isDeleted = 0 and partnerId = @partnerId", new { partnerId });
+                var selectedPartner = db.Query<Product>("select id, name, imageUrl, unitPrice, description, isOnSale from products where isDeleted = 0 and partnerId = @partnerId", new { partnerId });
 
 
                 return selectedPartner;
@@ -84,7 +106,7 @@ namespace PartingPets.Data
             {
 
 
-                var selectedProduct = db.Query<Product>("select id, name, description, isOnSale from products where Id = @id", new { ID });
+                var selectedProduct = db.Query<Product>("select id, name, imageUrl, description, isOnSale from products where Id = @id", new { ID });
 
 
                 return selectedProduct;
@@ -117,6 +139,7 @@ namespace PartingPets.Data
             {
                 var updateQuery = @"Update Products
                                 Set Name = @name,
+                                ImageUrl = @imageUrl,
                                 CategoryId = @categoryId,
                                 UnitPrice = @unitPrice,
                                 Description = @description,

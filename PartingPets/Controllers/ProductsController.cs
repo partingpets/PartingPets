@@ -13,7 +13,7 @@ namespace PartingPets.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductsController : ControllerBase
+    public class ProductsController : SecureControllerBase
 
     {
         readonly ProductsRepository _productRepository;
@@ -35,6 +35,16 @@ namespace PartingPets.Controllers
             return Ok(products);
         }
 
+        // ----- GET ALL PRODUCT CATEGORIES ---- //
+        // GET: api/Products/Categories
+        [HttpGet("categories")]
+        public ActionResult GetProductCategories()
+        {
+            var productCategories = _productRepository.GetProductCategories();
+
+            return Ok(productCategories);
+        }
+
         // ----- GET ALL PRODUCTS BY CATEGORY ID ---- //
         // GET: api/Products/Category/3
         [HttpGet("category/{categoryId}")]
@@ -47,7 +57,7 @@ namespace PartingPets.Controllers
 
         // ----- GET ALL PRODUCTS BY PARTNER ID ---- //
         // GET: api/Products/Partners/3
-        [HttpGet("partners/{partnerId}")]
+        [HttpGet("partner/{partnerId}")]
         public ActionResult GetProductsByPartner(int partnerId)
         {
             var selectedPartner = _productRepository.GetProductsByPartner(partnerId);
@@ -74,7 +84,7 @@ namespace PartingPets.Controllers
                 return BadRequest(new { error = "Parting Pets Requests You Fill All Necessary Fields." });
             }
 
-            var newProduct = _productRepository.AddProduct(createRequest.Name, createRequest.UnitPrice, createRequest.CategoryId, createRequest.Description, createRequest.IsOnSale, createRequest.IsDeleted);
+            var newProduct = _productRepository.AddProduct(createRequest);
 
             return Created($"api/products/{newProduct.ID}", newProduct);
         }

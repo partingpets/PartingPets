@@ -54,19 +54,6 @@ namespace PartingPets.Data
         {
             using(var db = new SqlConnection(_connectionString))
             {
-                //id,
-                //FireBaseUid,
-                //FirstName,
-                //LastName,
-                //Street1,
-                //Street2,
-                //City,
-                //State,
-                //Zipcode,
-                //Email,
-                //IsPartner,
-                //PartnerID,
-                //IsAdmin
                 var getUserByIdQuery = @"
                         SELECT 
                             *
@@ -132,7 +119,6 @@ namespace PartingPets.Data
                 //0001-01-01T00: 00:00
             }
 
-
             using(var db = new SqlConnection(_connectionString))
             {
                 var editUserQuery = @"
@@ -164,7 +150,6 @@ namespace PartingPets.Data
                     return updatedUserObj;
                 }
                 throw new Exception("Could not update user");
-
             }
         }
     }
