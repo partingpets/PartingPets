@@ -16,19 +16,47 @@ namespace PartingPets.Data
         {
             using (var db = new SqlConnection(ConnectionString))
             {
-                var partners = db.Query<Partners>("select id, name, description, street, city, state, zipcode, isdeleted, datedeleted from partners").ToList();
+                var partners = db.Query<Partners>("select id, name, description, registrationCode, street, city, state, zipcode, isdeleted, datedeleted from partners").ToList();
                 return partners;
             }
         }
 
         public Partners GetPartner(int id)
         {
-            var sql = "select id, name, description, street, city, state, zipcode, isdeleted, datedeleted from partners where Id = @id;";
+            var sql = "select id, name, description, registrationCode,  street, city, state, zipcode, isdeleted, datedeleted from partners where Id = @id;";
             using (var db = new SqlConnection(ConnectionString))
             {
                 var partner = db.QueryFirstOrDefault<Partners>(sql, new { id });
                 return partner;
             }
+        }
+
+        public Partners GetPartnerCode(string RegistrationCode)
+        {
+            using(var db = new SqlConnection(ConnectionString))
+            {
+                var getPartnerCodeQuery = @"
+                SELECT 
+                    Id, RegistrationCode
+                FROM
+                    [Partners] p
+                WHERE
+                    p.RegistrationCode = @RegistrationCode";
+
+                var partner = db.QueryFirstOrDefault<Partners>(getPartnerCodeQuery, new { RegistrationCode });
+
+                if(partner != null)
+                {
+                    return partner;
+                }
+                else
+                {
+                    return null;
+                }
+
+            }
+            throw new Exception("Partner registration code not found");
+                
         }
 
         public Partners AddPartner(string name, string description, string street, string city, string state, string zipcode)

@@ -11,11 +11,13 @@ namespace PartingPets.Controllers
     {
         readonly UsersRepository _repo;
         readonly UserRequestValidator _validator;
+        readonly EditUserValidator _editUserValidator;
 
         public UsersController(UsersRepository repo)
         {
             _repo = repo;
             _validator = new UserRequestValidator();
+            _editUserValidator = new EditUserValidator();
 
         }
 
@@ -62,8 +64,23 @@ namespace PartingPets.Controllers
 
         // PUT: api/User/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public ActionResult<EditUserRequest> UpdateUser(int id, [FromBody] EditUserRequest updatedUserObj)
         {
+            var jwtFirebaseId = UserId;
+            if(updatedUserObj.FireBaseUid != jwtFirebaseId && updatedUserObj.IsAdmin == false)
+            {
+                // return 401 as the User they are passing in is not the same as the one making the request
+                return Unauthorized();
+            }
+            
+            if(!_editUserValidator.Validate(updatedUserObj))
+            {
+                return BadRequest(new { error = "User object validation failed " });
+            }
+            //return null;
+            var updatedUser = _repo.UpdateUser(updatedUserObj);
+
+            return Ok(updatedUser);
         }
 
         // DELETE: api/ApiWithActions/5
