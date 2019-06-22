@@ -100,13 +100,13 @@ namespace PartingPets.Data
 
         // Get Single Product By ID //
 
-        public IEnumerable<Product> GetProductById(int ID)
+        public Product GetProductById(int ID)
         {
             using (var db = new SqlConnection(ConnectionString))
             {
 
 
-                var selectedProduct = db.Query<Product>("select id, name, imageUrl, description, isOnSale from products where Id = @id", new { ID });
+                var selectedProduct = db.QueryFirstOrDefault<Product>("select id, name, unitPrice, imageUrl, categoryId, description, isOnSale from products where Id = @id", new { ID });
 
 
                 return selectedProduct;
