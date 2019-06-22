@@ -154,5 +154,47 @@ namespace PartingPets.Data
                 throw new Exception("Could not update user");
             }
         }
+
+        public User GetUserByDbId(int id)
+        {
+            using(var db = new SqlConnection(_connectionString))
+            {
+                var getUserByIdQuery = @"
+                        SELECT 
+                            *
+                        FROM [User] u
+                        WHERE u.Id = @id";
+
+                var selectedUser = db.QueryFirstOrDefault<User>(getUserByIdQuery, new { id });
+
+                if(selectedUser != null)
+                {
+                    return selectedUser;
+                }
+            }
+            throw new Exception("User not found");
+        }
+
+        public void DeleteUser(int id)
+        {
+            using(var db = new SqlConnection(_connectionString))
+            {
+                var deleteUserQuery = @"
+                    UPDATE 
+                      [User] 
+                    SET 
+                      [DateDeleted] = GETUTCDATE(), 
+                      [IsDeleted] = 1 
+                    WHERE 
+                      id = @id";
+
+                var rowsAffected = db.Execute(deleteUserQuery, new { id });
+
+                if(rowsAffected != 1)
+                {
+                    throw new Exception("Error deleting the user");
+                }
+            }
+        }
     }
 }
