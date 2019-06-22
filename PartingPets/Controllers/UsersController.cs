@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PartingPets.Data;
 using PartingPets.Models;
+using PartingPets.Utils;
 using PartingPets.Validators;
 
 namespace PartingPets.Controllers
@@ -12,12 +13,14 @@ namespace PartingPets.Controllers
         readonly UsersRepository _repo;
         readonly UserRequestValidator _validator;
         readonly EditUserValidator _editUserValidator;
+        readonly UserAuthorization _userAuth;
 
         public UsersController(UsersRepository repo)
         {
             _repo = repo;
             _validator = new UserRequestValidator();
             _editUserValidator = new EditUserValidator();
+            _userAuth = new UserAuthorization();
 
         }
 
@@ -72,7 +75,7 @@ namespace PartingPets.Controllers
                 // return 401 as the User they are passing in is not the same as the one making the request
                 return Unauthorized();
             }
-            
+
             if(!_editUserValidator.Validate(updatedUserObj))
             {
                 return BadRequest(new { error = "User object validation failed " });
@@ -85,8 +88,28 @@ namespace PartingPets.Controllers
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult Delete(int id)
         {
+            var jwtFirebaseId = UserId;
+
+            // Check if the user is modifying thier own account or if they are Admin
+            var authed = _userAuth.AuthorizeUserByUid(id, jwtFirebaseId, _repo);
+            if(!authed)
+            {
+                return Unauthorized(new { error = "User not Admin" });
+            }
+            else
+            {
+                try
+                {
+                    _repo.DeleteUser(id);
+                }
+                catch(System.Exception e)
+                {
+                    throw e;
+                }
+            }
+            return NoContent();
         }
     }
 }
