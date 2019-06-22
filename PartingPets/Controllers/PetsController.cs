@@ -28,11 +28,18 @@ namespace PartingPets.Controllers
             return Ok(_petRepository.GetAllPets());
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("my-pets/{id}")]
         public ActionResult GetPetsById(int id)
         {
             return Ok(_petRepository.GetMyPets(id));
         }
+
+        [HttpGet("{id}")]
+        public ActionResult GetSinglePet(int id)
+        {
+            return Ok(_petRepository.GetSinglePet(id));
+        }
+
 
         [HttpPost]
         public ActionResult AddPet(CreatePetRequest createRequest)
@@ -41,12 +48,21 @@ namespace PartingPets.Controllers
             {
                 return BadRequest(new { error = "pets must have a name, user Id, breed, date of birth, and date of death." });
             }
-            var newPet = _petRepository.AddPet(createRequest.Name, createRequest.UserId, createRequest.Breed, createRequest.DateOfBirth, createRequest.DateOfDeath);
+            var newPet = _petRepository.AddPet( createRequest.Name, 
+                                                createRequest.UserId, 
+                                                createRequest.Breed, 
+                                                createRequest.DateOfBirth, 
+                                                createRequest.DateOfDeath, 
+                                                createRequest.BurialStreet, 
+                                                createRequest.BurialCity, 
+                                                createRequest.BurialState, 
+                                                createRequest.BurialZipCode, 
+                                                createRequest.BurialPlot );
 
             return Created($"api/pets/{newPet.Id}", newPet);
         }
 
-        [HttpPut("update/{id}")]
+        [HttpPut("{id}")]
         public ActionResult UpdatePet(int id, Pet petToUpdate)
         {
             if (id != petToUpdate.Id)
