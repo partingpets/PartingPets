@@ -80,7 +80,7 @@ namespace PartingPets.Controllers
         {
             if (id != partnerToUpdate.Id)
             {
-                return BadRequest();
+                return BadRequest( new { Error = "There was an error" });
             }
             var partner = _partnersRepository.UpdatePartner(partnerToUpdate);
             return Ok(partner);
