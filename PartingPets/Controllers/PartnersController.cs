@@ -61,14 +61,7 @@ namespace PartingPets.Controllers
                 return BadRequest(new { error = "We need all the information to become a Parting Pets Partner" });
             }
 
-            var newPartner = _partnersRepository.AddPartner(
-                createRequest.Name,
-                createRequest.Description,
-                createRequest.Street,
-                createRequest.City,
-                createRequest.State,
-                createRequest.Zipcode
-                );
+            var newPartner = _partnersRepository.AddPartner(createRequest);
 
             return Created($"api/partners/{newPartner.Id}", newPartner);
 
@@ -80,7 +73,7 @@ namespace PartingPets.Controllers
         {
             if (id != partnerToUpdate.Id)
             {
-                return BadRequest();
+                return BadRequest( new { Error = "There was an error" });
             }
             var partner = _partnersRepository.UpdatePartner(partnerToUpdate);
             return Ok(partner);

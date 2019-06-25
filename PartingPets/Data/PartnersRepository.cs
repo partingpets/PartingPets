@@ -59,15 +59,23 @@ namespace PartingPets.Data
                 
         }
 
-        public Partners AddPartner(string name, string description, string street, string city, string state, string zipcode)
+        public Partners AddPartner(CreatePartnerRequest newPartnerObj)
         {
             using (var db = new SqlConnection(ConnectionString))
             {
                 var newPartner = db.QueryFirstOrDefault<Partners>(@"
-                    Insert into partners(name, description, street, city, state, zipcode)
+                    Insert into partners(name, description, street, city, state, zipcode, registrationcode)
                     Output inserted.*
-                    Values(@name, @description, @street, @city, @state, @zipcode)",
-                    new { name, description, street, city, state, zipcode});
+                    Values(@name, @description, @street, @city, @state, @zipcode, @registrationcode)",
+                    new {
+                        newPartnerObj.Name,
+                        newPartnerObj.Description,
+                        newPartnerObj.Street,
+                        newPartnerObj.City,
+                        newPartnerObj.State,
+                        newPartnerObj.Zipcode,
+                        newPartnerObj.RegistrationCode,
+                    });
 
                 if (newPartner != null)
                 {
@@ -85,7 +93,7 @@ namespace PartingPets.Data
             {
                 var parameter = new { Id = id };
 
-                var deleteQuery = "Update Partners SET isDeleted = 1 where Id = @id";
+                var deleteQuery = "Update Partners SET isDeleted = 1, DateDeleted = GETUTCDATE() where Id = @id";
 
                 var rowsAffected = db.Execute(deleteQuery, parameter);
 
