@@ -77,7 +77,11 @@ CREATE TABLE [dbo].[PaymentType](
     [Id] [int] NOT NULL IDENTITY(1,1),
     [UserId] [int] NOT NULL,
     [Name] [nvarchar](255) NOT NULL,
-    [AccountNumber] [nvarchar](50) NOT NULL
+    [AccountNumber] [nvarchar](50) NOT NULL,
+    [Type] [nvarchar](50) NOT NULL,
+    [CVV] [int] NOT NULL,
+    [ExpDate] [datetime] NOT NULL,
+    [IsDeleted] [bit] NOT NULL
 CONSTRAINT [PK_PaymentType] PRIMARY KEY CLUSTERED 
 (
     [Id] ASC
@@ -92,13 +96,10 @@ DROP TABLE [dbo].[Invoice]
 GO
 -- Create the table in the specified schema
 CREATE TABLE [dbo].[Invoice](
-    [Id] [int] NOT NULL IDENTITY(1,1),
-    [PaymentTypeId] [int] NOT NULL,
+    [Id] [int] NOT NULL IDENTITY(1000,1),
     [UserID] [int] NOT NULL,
-    [BillingStreet] [nvarchar](255) NOT NULL,
-    [BillingZip] [int] NOT NULL,
-    [BillingState] [nvarchar](255) NOT NULL,
-    [BillingCity] [nvarchar](255) NOT NULL,
+    [PaymentTypeId] [int] NOT NULL,
+    [PurchaseDate] [datetime] NOT NULL,
     [Total] [numeric](10, 2) NOT NULL,
 CONSTRAINT [PK_Invoice] PRIMARY KEY CLUSTERED 
 (
@@ -119,8 +120,42 @@ CREATE TABLE [dbo].[InvoiceLine](
     [ProductId] [int] NOT NULL,
     [Quantity] [int] NOT NULL,
     [UnitPrice] [numeric](10, 2) NOT NULL,
-    [ExtendedPrice] [numeric](10, 2) NOT NULL,
 CONSTRAINT [PK_InvoiceLine] PRIMARY KEY CLUSTERED 
+(
+    [Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+-- Create a new table called '[ShoppingCart]' in schema '[dbo]'
+-- Drop the table if it already exists
+IF OBJECT_ID('[dbo].[ShoppingCart]', 'U') IS NOT NULL
+DROP TABLE [dbo].[ShoppingCart]
+GO
+-- Create the table in the specified schema
+CREATE TABLE [dbo].[ShoppingCart](
+    [Id] [int] NOT NULL IDENTITY(1,1),
+    [UserID] [int] NOT NULL,
+CONSTRAINT [PK_ShoppingCart] PRIMARY KEY CLUSTERED 
+(
+    [Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+-- Create a new table called '[ShoppingCartLine]' in schema '[dbo]'
+-- Drop the table if it already exists
+IF OBJECT_ID('[dbo].[ShoppingCartLine]', 'U') IS NOT NULL
+DROP TABLE [dbo].[ShoppingCartLine]
+GO
+-- Create the table in the specified schema
+CREATE TABLE [dbo].[ShoppingCartLine](
+    [Id] [int] NOT NULL IDENTITY(1,1),
+    [ShoppingCartId] [int] NOT NULL,
+    [ProductId] [int] NOT NULL,
+    [Quantity] [int] NOT NULL,
+    [IsActive] [bit] NOT NULL,
+CONSTRAINT [PK_ShoppingCartLine] PRIMARY KEY CLUSTERED 
 (
     [Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -228,46 +263,75 @@ GO
 ALTER TABLE [dbo].[Invoice]  WITH CHECK ADD  CONSTRAINT [FK_Invoice_UserID] FOREIGN KEY([UserID])
 REFERENCES [dbo].[User] ([Id])
 GO
+
 ALTER TABLE [dbo].[PaymentType]  WITH CHECK ADD  CONSTRAINT [FK_PaymentType_UserID] FOREIGN KEY([UserID])
 REFERENCES [dbo].[User] ([Id])
 GO
+
 ALTER TABLE [dbo].[Invoice]  WITH CHECK ADD  CONSTRAINT [FK_Invoice_PaymentTypeId] FOREIGN KEY([PaymentTypeId])
 REFERENCES [dbo].[PaymentType] ([Id])
 GO
+
 ALTER TABLE [dbo].[Invoice] CHECK CONSTRAINT [FK_Invoice_UserID]
 GO
+
 ALTER TABLE [dbo].[InvoiceLine]  WITH CHECK ADD  CONSTRAINT [FK_InvoiceLine_InvoiceID] FOREIGN KEY([InvoiceID])
 REFERENCES [dbo].[Invoice] ([Id])
 GO
+
 ALTER TABLE [dbo].[InvoiceLine] CHECK CONSTRAINT [FK_InvoiceLine_InvoiceID]
 GO
+
 ALTER TABLE [dbo].[InvoiceLine]  WITH CHECK ADD  CONSTRAINT [FK_InvoiceLine_ProductID] FOREIGN KEY([ProductID])
 REFERENCES [dbo].[Products] ([Id])
 GO
+
 ALTER TABLE [dbo].[InvoiceLine] CHECK CONSTRAINT [FK_InvoiceLine_ProductID]
 GO
+
 ALTER TABLE [dbo].[Pets]  WITH CHECK ADD  CONSTRAINT [FK_Pets_UserId] FOREIGN KEY([UserId])
 REFERENCES [dbo].[User] ([Id])
 GO
+
 ALTER TABLE [dbo].[Pets] CHECK CONSTRAINT [FK_Pets_UserId]
 GO
+
 ALTER TABLE [dbo].[Products]  WITH CHECK ADD  CONSTRAINT [FK_Products_CategoryId] FOREIGN KEY([CategoryId])
 REFERENCES [dbo].[ProductCategory] ([Id])
 GO
+
 ALTER TABLE [dbo].[Products] CHECK CONSTRAINT [FK_Products_CategoryId]
 GO
+
 ALTER TABLE [dbo].[Products]  WITH CHECK ADD  CONSTRAINT [FK_Products_PartnerID] FOREIGN KEY([PartnerID])
 REFERENCES [dbo].[Partners] ([Id])
 GO
+
 ALTER TABLE [dbo].[Products] CHECK CONSTRAINT [FK_Products_PartnerID]
 GO
+
 ALTER TABLE [dbo].[User]  WITH CHECK ADD  CONSTRAINT [FK_User_Partners] FOREIGN KEY([PartnerID])
 REFERENCES [dbo].[Partners] ([Id])
 GO
+
+ALTER TABLE [dbo].[ShoppingCart]  WITH CHECK ADD  CONSTRAINT [FK_ShoppingCart_UserID] FOREIGN KEY([UserID])
+REFERENCES [dbo].[User] ([Id])
+GO
+
+ALTER TABLE [dbo].[ShoppingCartLine]  WITH CHECK ADD  CONSTRAINT [FK_ShoppingCartLine_ShoppingCartID] FOREIGN KEY([ShoppingCartId])
+REFERENCES [dbo].[ShoppingCart] ([Id])
+GO
+
+ALTER TABLE [dbo].[ShoppingCartLine]  WITH CHECK ADD  CONSTRAINT [FK_ShoppingCartLine_ProductID] FOREIGN KEY([ProductID])
+REFERENCES [dbo].[Products] ([Id])
+GO
+
 ALTER TABLE [dbo].[User] CHECK CONSTRAINT [FK_User_Partners]
 GO
+
 USE [master]
 GO
+
 ALTER DATABASE [PartingPets] SET  READ_WRITE 
 GO
 
@@ -330,8 +394,10 @@ USE PartingPets
 
 
 USE PartingPets
-    INSERT INTO [dbo].[PaymentType] ([UserId], [Name], [AccountNumber]) VALUES (1, 'American Express', '3111111111111117')
-    INSERT INTO [dbo].[PaymentType] ([UserId], [Name], [AccountNumber]) VALUES (3, 'Visa', '4111111111111111')
+    INSERT INTO [dbo].[PaymentType] ([UserId], [Name], [AccountNumber], [Type], [CVV], [ExpDate], [IsDeleted]) VALUES (11, 'Marcos Amex', '3111111111111117', 'American Express', 123, '2020-07-25 10:50:40', 0)
+    INSERT INTO [dbo].[PaymentType] ([UserId], [Name], [AccountNumber], [Type], [CVV], [ExpDate], [IsDeleted]) VALUES (12, 'Colins Visa', '4111111111111111', 'Visa', 123, '2020-07-25 10:50:40', 0)
+    INSERT INTO [dbo].[PaymentType] ([UserId], [Name], [AccountNumber], [Type], [CVV], [ExpDate], [IsDeleted]) VALUES (13, 'Jonathans MasterCard', '5111111111111118', 'MasterCard', 123, '2020-07-25 10:50:40', 0)
+    INSERT INTO [dbo].[PaymentType] ([UserId], [Name], [AccountNumber], [Type], [CVV], [ExpDate], [IsDeleted]) VALUES (14, 'Tims Discover', '6111111111111116', 'Discover', 123, '2020-07-25 10:50:40', 0)
 
 USE PartingPets
     INSERT INTO [dbo].[ProductCategory] ([Name], [Type]) VALUES ('Casket','Product')
@@ -357,14 +423,60 @@ USE PartingPets
     INSERT INTO [dbo].[Products] ([Name], [ImageUrl], [CategoryId], [UnitPrice], [PartnerID], [Description], [IsOnSale], [IsDeleted]) VALUES ('Reclaimed Wood 5x7 Frame', 'http://intuitiveconsumer.com/blog/wp-content/uploads/2015/05/new-product.png', 5, 19.99, null, 'Stunning 5x7 reclaimed wooden frame for lasting memories', 0, 0)
    
 USE PartingPets
-    INSERT INTO [dbo].[Invoice] ([PaymentTypeId], [UserID], [BillingStreet], [BillingCity], [BillingState], [BillingZip], [Total]) VALUES (1, 1, '4979 Collier Walks','New Martineton','Maine','66888', 119.98)
-    INSERT INTO [dbo].[Invoice] ([PaymentTypeId], [UserID], [BillingStreet], [BillingCity], [BillingState], [BillingZip], [Total]) VALUES (2, 3, '45573 Marley Junctions','Ortizland','Nevada','68240', 306.98)
+    INSERT INTO [dbo].[Invoice] ([UserID], [PaymentTypeId], [PurchaseDate], [Total]) VALUES (11, 1, '2018-09-05 13:07:44', 119.98)
+    INSERT INTO [dbo].[Invoice] ([UserID], [PaymentTypeId], [PurchaseDate], [Total]) VALUES (12, 2, '2019-04-05 11:25:23', 306.98)
+    INSERT INTO [dbo].[Invoice] ([UserID], [PaymentTypeId], [PurchaseDate], [Total]) VALUES (13, 3, '2019-04-05 11:25:23', 306.98)
+    INSERT INTO [dbo].[Invoice] ([UserID], [PaymentTypeId], [PurchaseDate], [Total]) VALUES (14, 4, '2019-04-05 11:25:23', 306.98)
+    INSERT INTO [dbo].[Invoice] ([UserID], [PaymentTypeId], [PurchaseDate], [Total]) VALUES (11, 1, '2018-09-05 13:07:44', 119.98)
+    INSERT INTO [dbo].[Invoice] ([UserID], [PaymentTypeId], [PurchaseDate], [Total]) VALUES (12, 2, '2019-04-05 11:25:23', 306.98)
+    INSERT INTO [dbo].[Invoice] ([UserID], [PaymentTypeId], [PurchaseDate], [Total]) VALUES (13, 3, '2019-04-05 11:25:23', 306.98)
+    INSERT INTO [dbo].[Invoice] ([UserID], [PaymentTypeId], [PurchaseDate], [Total]) VALUES (14, 4, '2019-04-05 11:25:23', 306.98)
     
 
 USE PartingPets
-    INSERT INTO [dbo].[InvoiceLine] ([InvoiceID], [ProductID], [Quantity], [UnitPrice], [ExtendedPrice]) VALUES (1, 1, 1, 100.00, 100.00)
-    INSERT INTO [dbo].[InvoiceLine] ([InvoiceID], [ProductID], [Quantity], [UnitPrice], [ExtendedPrice]) VALUES (1,3, 2, 9.99, 19.98)
-    INSERT INTO [dbo].[InvoiceLine] ([InvoiceID], [ProductID], [Quantity], [UnitPrice], [ExtendedPrice]) VALUES (2, 5, 1, 29.99, 29.99)
-    INSERT INTO [dbo].[InvoiceLine] ([InvoiceID], [ProductID], [Quantity], [UnitPrice], [ExtendedPrice]) VALUES (2, 2, 1, 276.99, 276.99)
+    INSERT INTO [dbo].[InvoiceLine] ([InvoiceID], [ProductID], [Quantity], [UnitPrice]) VALUES (1000, 1, 1, 100.00)
+    INSERT INTO [dbo].[InvoiceLine] ([InvoiceID], [ProductID], [Quantity], [UnitPrice]) VALUES (1000, 2, 2, 276.99)
+    INSERT INTO [dbo].[InvoiceLine] ([InvoiceID], [ProductID], [Quantity], [UnitPrice]) VALUES (1001, 3, 1, 9.99)
+    INSERT INTO [dbo].[InvoiceLine] ([InvoiceID], [ProductID], [Quantity], [UnitPrice]) VALUES (1001, 4, 2, 129.99)
+    INSERT INTO [dbo].[InvoiceLine] ([InvoiceID], [ProductID], [Quantity], [UnitPrice]) VALUES (1002, 5, 1, 29.99)
+    INSERT INTO [dbo].[InvoiceLine] ([InvoiceID], [ProductID], [Quantity], [UnitPrice]) VALUES (1002, 6, 2, 14.99)
+    INSERT INTO [dbo].[InvoiceLine] ([InvoiceID], [ProductID], [Quantity], [UnitPrice]) VALUES (1003, 7, 1, 29.99)
+    INSERT INTO [dbo].[InvoiceLine] ([InvoiceID], [ProductID], [Quantity], [UnitPrice]) VALUES (1003, 8, 2, 59.99)
+    INSERT INTO [dbo].[InvoiceLine] ([InvoiceID], [ProductID], [Quantity], [UnitPrice]) VALUES (1004, 9, 1, 179.99)
+    INSERT INTO [dbo].[InvoiceLine] ([InvoiceID], [ProductID], [Quantity], [UnitPrice]) VALUES (1004, 10, 2, 19.99)
+    INSERT INTO [dbo].[InvoiceLine] ([InvoiceID], [ProductID], [Quantity], [UnitPrice]) VALUES (1005, 9, 1, 179.99)
+    INSERT INTO [dbo].[InvoiceLine] ([InvoiceID], [ProductID], [Quantity], [UnitPrice]) VALUES (1005, 10, 2, 19.99)
+    INSERT INTO [dbo].[InvoiceLine] ([InvoiceID], [ProductID], [Quantity], [UnitPrice]) VALUES (1006, 9, 1, 179.99)
+    INSERT INTO [dbo].[InvoiceLine] ([InvoiceID], [ProductID], [Quantity], [UnitPrice]) VALUES (1006, 10, 2, 19.99)
+    INSERT INTO [dbo].[InvoiceLine] ([InvoiceID], [ProductID], [Quantity], [UnitPrice]) VALUES (1007, 9, 1, 179.99)
+    INSERT INTO [dbo].[InvoiceLine] ([InvoiceID], [ProductID], [Quantity], [UnitPrice]) VALUES (1007, 10, 2, 19.99)
+
+USE PartingPets
+    -- Marco Shopping Cart
+    INSERT INTO [dbo].[ShoppingCart] ([UserID]) VALUES (11)
+    -- Colin Shopping Cart
+    INSERT INTO [dbo].[ShoppingCart] ([UserID]) VALUES (12)
+    -- Jonathan Shopping Cart
+    INSERT INTO [dbo].[ShoppingCart] ([UserID]) VALUES (13)
+    -- Tim Shopping Cart
+    INSERT INTO [dbo].[ShoppingCart] ([UserID]) VALUES (14)
+
+USE PartingPets
+    -- Marco Shopping Cart
+    INSERT INTO [dbo].[ShoppingCartLine] ([ShoppingCartId], [ProductID], [Quantity], [IsActive]) VALUES (1, 3, 5, 0)
+    INSERT INTO [dbo].[ShoppingCartLine] ([ShoppingCartId], [ProductID], [Quantity], [IsActive]) VALUES (1, 7, 5, 1)
+    INSERT INTO [dbo].[ShoppingCartLine] ([ShoppingCartId], [ProductID], [Quantity], [IsActive]) VALUES (1, 6, 4, 0)
+    -- Colin Shopping Cart
+    INSERT INTO [dbo].[ShoppingCartLine] ([ShoppingCartId], [ProductID], [Quantity], [IsActive]) VALUES (2, 3, 5, 0)
+    INSERT INTO [dbo].[ShoppingCartLine] ([ShoppingCartId], [ProductID], [Quantity], [IsActive]) VALUES (2, 7, 5, 1)
+    INSERT INTO [dbo].[ShoppingCartLine] ([ShoppingCartId], [ProductID], [Quantity], [IsActive]) VALUES (2, 6, 4, 0)
+    -- Jonathan Shopping Cart
+    INSERT INTO [dbo].[ShoppingCartLine] ([ShoppingCartId], [ProductID], [Quantity], [IsActive]) VALUES (3, 3, 5, 0)
+    INSERT INTO [dbo].[ShoppingCartLine] ([ShoppingCartId], [ProductID], [Quantity], [IsActive]) VALUES (3, 7, 5, 1)
+    INSERT INTO [dbo].[ShoppingCartLine] ([ShoppingCartId], [ProductID], [Quantity], [IsActive]) VALUES (3, 6, 4, 0)
+    -- Tim Shopping Cart
+    INSERT INTO [dbo].[ShoppingCartLine] ([ShoppingCartId], [ProductID], [Quantity], [IsActive]) VALUES (4, 3, 5, 0)
+    INSERT INTO [dbo].[ShoppingCartLine] ([ShoppingCartId], [ProductID], [Quantity], [IsActive]) VALUES (4, 7, 5, 1)
+    INSERT INTO [dbo].[ShoppingCartLine] ([ShoppingCartId], [ProductID], [Quantity], [IsActive]) VALUES (4, 6, 4, 0)
 
 USE master
