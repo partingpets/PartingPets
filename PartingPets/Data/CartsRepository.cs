@@ -24,7 +24,8 @@ namespace PartingPets.Data
             using (var db = new SqlConnection(_connectionString))
             {
                 var getAllCartsQuery = @"
-                        SELECT u.FirstName + ' ' + u.LastName AS UserName,
+                        SELECT p.Id AS Id,
+                               u.FirstName + ' ' + u.LastName AS UserName,
                                u.id AS UserId,
                                p.Name,
                                p.Description,
@@ -50,7 +51,8 @@ namespace PartingPets.Data
             using (var db = new SqlConnection(_connectionString))
             {
                 var getCartsByUidQuery = @"
-                        SELECT p.Name,
+                        SELECT p.Id,
+                               p.Name,
                                p.Description,
                                p.ImageUrl,
                                sc.Quantity,
