@@ -25,6 +25,7 @@ namespace PartingPets.Data
             {
                 var getAllCartsQuery = @"
                         SELECT p.Id AS Id,
+                               p.IsDeleted,
                                u.FirstName + ' ' + u.LastName AS UserName,
                                u.id AS UserId,
                                p.Name,
@@ -52,6 +53,7 @@ namespace PartingPets.Data
             {
                 var getCartsByUidQuery = @"
                         SELECT p.Id,
+                               p.IsDeleted,
                                p.Name,
                                p.Description,
                                p.ImageUrl,

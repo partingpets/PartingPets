@@ -8,6 +8,7 @@ namespace PartingPets.Models
     public class ShoppingCartAll
     {
         public int Id { get; set; }
+        public bool IsDeleted { get; set; }
         public string UserName { get; set; }
         public int UserId { get; set; }
         public string Name { get; set; }
