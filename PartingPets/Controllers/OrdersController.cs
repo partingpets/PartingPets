@@ -11,7 +11,7 @@ namespace PartingPets.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class OrdersController : ControllerBase
+    public class OrdersController : SecureControllerBase
     {
         readonly OrdersRepository _repo;
 
@@ -28,7 +28,7 @@ namespace PartingPets.Controllers
         }
 
         // GET: api/Orders/5
-        [HttpGet("{id}", Name = "Get")]
+        [HttpGet("{id}")]
         public string Get(int id)
         {
             return "value";
@@ -36,11 +36,11 @@ namespace PartingPets.Controllers
 
         // POST: api/Orders
         [HttpPost]
-        public ActionResult CreateOrder()
+        public ActionResult CreateOrder(Orders newOrderObj)
         {
-            var newOrder = _repo.CreateOrder();
+            var newOrder = _repo.CreateOrder(newOrderObj);
 
-            return Created();
+            return Created($"api/orders/{newOrder.Id}", newOrder);
         }
 
         // PUT: api/Orders/5

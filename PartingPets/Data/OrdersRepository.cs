@@ -16,9 +16,23 @@ namespace PartingPets.Data
         {
             using (var db = new SqlConnection(ConnectionString))
             {
-                var newOrder = db.QueryFirstOrDefault<Orders>(@"");
-                return;
+                var newOrder = db.QueryFirstOrDefault<Orders>(@"
+                    Insert into orders(userid, paymenttypeid, purchasedate)
+                    Output inserted.*
+                    Values(@userid, @paymenttypeid, GETUTCDATE())",
+                    new
+                    {
+                        newOrderObj.UserId,
+                        newOrderObj.PaymentTypeId, 
+                        newOrderObj.PurchaseDate,
+                    });
+
+                if (newOrder != null)
+                {
+                    return newOrder;
+                }
             }
+            throw new Exception("Unfortunatley, a new order was not created");
         }
     }
 }
