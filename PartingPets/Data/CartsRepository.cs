@@ -24,15 +24,16 @@ namespace PartingPets.Data
             using (var db = new SqlConnection(_connectionString))
             {
                 var getAllCartsQuery = @"
-                        SELECT p.Id AS Id,
-                               p.IsDeleted,
-                               u.FirstName + ' ' + u.LastName AS UserName,
-                               u.id AS UserId,
-                               p.Name,
-                               p.Description,
-                               p.ImageUrl,
-                               sc.Quantity,
-                               p.UnitPrice
+                        SELECT
+                            p.Id AS Id,
+                            p.IsDeleted,
+                            u.FirstName + ' ' + u.LastName AS UserName,
+                            u.id AS UserId,
+                            p.Name,
+                            p.Description,
+                            p.ImageUrl,
+                            sc.Quantity,
+                            p.UnitPrice
                         FROM [ShoppingCart] sc
                         JOIN [Products] p ON sc.ProductID = p.Id
                         JOIN [User] u ON sc.UserID = u.Id";
@@ -52,17 +53,19 @@ namespace PartingPets.Data
             using (var db = new SqlConnection(_connectionString))
             {
                 var getCartsByUidQuery = @"
-                        SELECT p.Id,
-                               p.IsDeleted,
-                               p.Name,
-                               p.Description,
-                               p.ImageUrl,
-                               sc.Quantity,
-                               p.UnitPrice
-                        FROM [ShoppingCart] sc
-                        JOIN [Products] p ON sc.ProductID = p.Id
-                        JOIN [User] u ON sc.UserID = u.Id
-                        WHERE sc.UserID = @userId";
+                        SELECT
+                            sc.Id AS CartId,
+                            p.Id AS ProductId,
+                            p.IsDeleted,
+                            p.Name,
+                            p.Description,
+                            p.ImageUrl,
+                            sc.Quantity,
+                            p.UnitPrice
+                    FROM [ShoppingCart] sc
+                    JOIN [Products] p ON sc.ProductID = p.Id
+                    JOIN [User] u ON sc.UserID = u.Id
+                    WHERE sc.UserID = @userId";
 
                 var selectedCart = db.Query<ShoppingCart>(getCartsByUidQuery, new { userId });
 
@@ -72,6 +75,24 @@ namespace PartingPets.Data
                 }
             }
             throw new Exception("Shopping Cart not found");
+        }
+
+        public void DeleteShoppingCartItem(int itemId)
+        {
+            using (var db = new SqlConnection(_connectionString))
+            {
+                var deleteCartIytemQuery = @"
+                        DELETE
+                        FROM [ShoppingCart]
+                        WHERE Id = @itemId";
+
+                var rowsAffected = db.Execute(deleteCartIytemQuery, new { itemId });
+
+                if (rowsAffected != 1)
+                {
+                    throw new Exception("Error deleteing the cart item");
+                }
+            }
         }
     }
 }
