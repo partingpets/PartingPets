@@ -19,7 +19,7 @@ namespace PartingPets.Data
                 var newOrder = db.QueryFirstOrDefault<Orders>(@"
                     Insert into orders(userid, paymenttypeid, purchasedate)
                     Output inserted.*
-                    Values(@userid, @paymenttypeid, GETUTCDATE())",
+                    Values(@UserId, @PaymentTypeId, GETUTCDATE())",
                     new
                     {
                         newOrderObj.UserId,

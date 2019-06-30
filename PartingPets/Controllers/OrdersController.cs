@@ -38,7 +38,12 @@ namespace PartingPets.Controllers
         [HttpPost]
         public ActionResult CreateOrder(Orders newOrderObj)
         {
+        
             var newOrder = _repo.CreateOrder(newOrderObj);
+            if (newOrder == null)
+            {
+                return NotFound();
+            }
 
             return Created($"api/orders/{newOrder.Id}", newOrder);
         }
