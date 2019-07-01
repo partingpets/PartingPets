@@ -34,5 +34,29 @@ namespace PartingPets.Data
             }
             throw new Exception("Unfortunatley, a new order was not created");
         }
+
+        public OrderLines CreateOrderLines(OrderLines OrderItem)
+        {
+            using (var db = new SqlConnection(ConnectionString))
+            {
+        var newOrderLine = db.QueryFirstOrDefault<OrderLines>(@"
+                    Insert into ordersline(OrdersId, ProductId, Quantity, UnitPrice)
+                    Output inserted.*
+                    Values(@OrdersId, @ProductId, @Quantity, @UnitPrice)",
+                    new
+                    {
+                        OrderItem.OrdersId,
+                        OrderItem.ProductId,
+                        OrderItem.Quantity,
+                        OrderItem.UnitPrice
+                    });
+
+                if (newOrderLine != null)
+                {
+                    return newOrderLine;
+                }
+            }
+            throw new Exception("Unfortunatley, a new order was not created");
+        }
     }
 }

@@ -13,11 +13,13 @@ namespace PartingPets.Controllers
     [ApiController]
     public class OrdersController : SecureControllerBase
     {
-        readonly OrdersRepository _repo;
+        readonly OrdersRepository _ordersRepo;
+        readonly ProductsRepository _productsRepo;
 
-        public OrdersController(OrdersRepository repo)
+        public OrdersController(OrdersRepository ordersRepo, ProductsRepository productsRepo)
         {
-            _repo = repo;
+            _ordersRepo = ordersRepo;
+            _productsRepo = productsRepo;
         }
 
         // GET: api/Orders
@@ -39,11 +41,20 @@ namespace PartingPets.Controllers
         public ActionResult CreateOrder(Orders newOrderObj)
         {
         
-            var newOrder = _repo.CreateOrder(newOrderObj);
+            var newOrder = _ordersRepo.CreateOrder(newOrderObj);
             if (newOrder == null)
             {
                 return NotFound();
             }
+
+            foreach (var orderItem in newOrderObj.OrderLines)
+            {
+                var productItem = _productsRepo.GetProductById(orderItem.ProductId);
+                orderItem.OrdersId = newOrder.Id;
+                orderItem.UnitPrice = productItem.UnitPrice;
+                var orderLineItem = _ordersRepo.CreateOrderLines(orderItem);
+            }
+ 
 
             return Created($"api/orders/{newOrder.Id}", newOrder);
         }

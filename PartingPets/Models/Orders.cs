@@ -11,5 +11,7 @@ namespace PartingPets.Models
         public int UserId { get; set; }
         public int PaymentTypeId { get; set; }
         public DateTime PurchaseDate { get; set; }
+
+        public List<OrderLines> OrderLines { get; set; }
     }
 }
