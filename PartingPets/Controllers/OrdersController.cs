@@ -40,19 +40,28 @@ namespace PartingPets.Controllers
         [HttpPost]
         public ActionResult CreateOrder(Orders newOrderObj)
         {
+            // if statement for newOrderObj.OrderLines.Length = 0 reject message 
+            // try catch
         
             var newOrder = _ordersRepo.CreateOrder(newOrderObj);
             if (newOrder == null)
             {
                 return NotFound();
             }
-
+            // For each object in the array of objects called OrderLines
+            // Each object has productId and Quantity
             foreach (var orderItem in newOrderObj.OrderLines)
             {
+                // Gets all the information for a single product since an ID is passed in
                 var productItem = _productsRepo.GetProductById(orderItem.ProductId);
+                // For the OrdersLine table 
                 orderItem.OrdersId = newOrder.Id;
+                // Also for the OrdersLine table
                 orderItem.UnitPrice = productItem.UnitPrice;
+                // Now that the orderItem has all the required 4 fields we're passing it into a method that inserts it into the OrdersLine table
                 var orderLineItem = _ordersRepo.CreateOrderLines(orderItem);
+
+   
             }
  
 
