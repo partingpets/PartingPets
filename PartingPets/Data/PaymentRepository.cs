@@ -11,7 +11,7 @@ namespace PartingPets.Data
     public class PaymentRepository
     {
         const string ConnectionString = "Server=localhost; Database=PartingPets; Trusted_Connection=True;";
-    
+
         public PaymentType AddPaymentType(CreatePaymentTypeRequest newPaymentTypeObj)
         {
             using (var db = new SqlConnection(ConnectionString))
@@ -30,7 +30,7 @@ namespace PartingPets.Data
                         newPaymentTypeObj.ExpDate,
                         newPaymentTypeObj.IsDeleted
                     });
-                if(newPaymentQuery != null)
+                if (newPaymentQuery != null)
                 {
                     return newPaymentQuery;
                 }
@@ -48,6 +48,46 @@ namespace PartingPets.Data
 
                 return db.Query<PaymentType>(userPTQuery, new { id });
             }
+        }
+
+        public PaymentType UpdatePT(PaymentType PTToUpdate)
+        {
+            using (var db = new SqlConnection(ConnectionString))
+            {
+                var updatePTQuery = @"Update PaymentType
+                                    Set Name = @name,
+                                    AccountNumber = @accountNumber,
+                                    Type = @type,
+                                    CVV = @cvv,
+                                    ExpDate = @expDate
+                                    Where id = @id";
+
+                var rowsAffected = db.Execute(updatePTQuery, PTToUpdate);
+
+                if (rowsAffected == 1)
+                {
+                    return PTToUpdate;
+                }
+                throw new Exception("Failed to update your payment option.");
+            }
+        }
+
+        public void DeletePT(int id)
+        {
+            using (var db = new SqlConnection(ConnectionString))
+            {
+                var updatePTQuery = @"Update PaymentType
+                                    Set isDeleted = 1
+                                    Where id = @id";
+
+                var rowsAffected = db.Execute(updatePTQuery, new { id } );
+
+                if (rowsAffected != 1)
+                {
+                    throw new Exception("Failed to delete your payment option.");
+                }
+            }
+
         }
     }
 }

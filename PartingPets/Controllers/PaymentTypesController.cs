@@ -41,5 +41,25 @@ namespace PartingPets.Controllers
             return Created($"api/paymentTypes/{newPaymentType.Id}", newPaymentType);
         }
 
+        [HttpPut("{id}")]
+        public ActionResult UpdatePT(int id, PaymentType pTToUpdate)
+        {
+            if (id != pTToUpdate.Id)
+            {
+                return BadRequest(new { Error = "There was an authentication error with your update" });
+            }
+            var updatedPT = _paymentRepository.UpdatePT(pTToUpdate);
+
+            return Ok(updatedPT);
+        }
+
+        [HttpPut("delete-pt/{id}")]
+        public ActionResult DeletePT(int id)
+        {
+            _paymentRepository.DeletePT(id);
+
+            return NoContent();
+        }
+
     }
 }
