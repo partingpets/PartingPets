@@ -22,7 +22,7 @@ namespace PartingPets.Data
 
         public List<User> GetAllUsers()
         {
-            using(var db = new SqlConnection(_connectionString))
+            using (var db = new SqlConnection(_connectionString))
             {
                 var getAllUsersQuery = @"
                         SELECT
@@ -42,7 +42,7 @@ namespace PartingPets.Data
 
                 var allUsers = db.Query<User>(getAllUsersQuery).ToList();
 
-                if(allUsers != null)
+                if (allUsers != null)
                 {
                     return allUsers;
                 }
@@ -52,7 +52,7 @@ namespace PartingPets.Data
 
         public User GetUserById(string id)
         {
-            using(var db = new SqlConnection(_connectionString))
+            using (var db = new SqlConnection(_connectionString))
             {
                 var getUserByIdQuery = @"
                         SELECT 
@@ -62,7 +62,7 @@ namespace PartingPets.Data
 
                 var selectedUser = db.QueryFirstOrDefault<User>(getUserByIdQuery, new { id });
 
-                if(selectedUser != null)
+                if (selectedUser != null)
                 {
                     return selectedUser;
                 }
@@ -72,7 +72,7 @@ namespace PartingPets.Data
 
         public User AddNewUser(CreateUserRequest newUserObj)
         {
-            using(var db = new SqlConnection(_connectionString))
+            using (var db = new SqlConnection(_connectionString))
             {
                 var newUserQuery = @"
                         INSERT INTO [User] (FireBaseUid, FirstName, LastName, Street1, Street2, City, State, ZipCode, Email, IsPartner, PartnerId, IsAdmin, IsDeleted, DateCreated)
@@ -96,7 +96,7 @@ namespace PartingPets.Data
                     newUserObj.IsDeleted
                 });
 
-                if(newUser != null)
+                if (newUser != null)
                 {
                     return newUser;
                 }
@@ -107,13 +107,13 @@ namespace PartingPets.Data
         public EditUserRequest UpdateUser(EditUserRequest updatedUserObj)
         {
             // Handle the deleted user field sa we set it to Null in the DB if not set. Dot Net will pass in 1/1/0001 if set to null and SQL do not like
-            if(updatedUserObj.IsPartner == false)
+            if (updatedUserObj.IsPartner == false)
             {
                 updatedUserObj.PartnerId = null;
             }
 
             // Validate our dates to check that they are valid ranges of dates for SQL server
-            if(!_sqlDateValidator.IsValidSqlDateTime(updatedUserObj.DateDeleted))
+            if (!_sqlDateValidator.IsValidSqlDateTime(updatedUserObj.DateDeleted))
             {
                 // Value is not valid or null so set to a valid SQL date
                 // Struggled with setting this to Null so this will work for now
@@ -121,7 +121,7 @@ namespace PartingPets.Data
                 //0001-01-01T00: 00:00
             }
 
-            using(var db = new SqlConnection(_connectionString))
+            using (var db = new SqlConnection(_connectionString))
             {
                 var editUserQuery = @"
                     UPDATE 
@@ -147,7 +147,7 @@ namespace PartingPets.Data
 
                 var rowsAffected = db.Execute(editUserQuery, updatedUserObj);
 
-                if(rowsAffected == 1)
+                if (rowsAffected == 1)
                 {
                     return updatedUserObj;
                 }
@@ -157,7 +157,7 @@ namespace PartingPets.Data
 
         public User GetUserByDbId(int id)
         {
-            using(var db = new SqlConnection(_connectionString))
+            using (var db = new SqlConnection(_connectionString))
             {
                 var getUserByIdQuery = @"
                         SELECT 
@@ -167,7 +167,7 @@ namespace PartingPets.Data
 
                 var selectedUser = db.QueryFirstOrDefault<User>(getUserByIdQuery, new { id });
 
-                if(selectedUser != null)
+                if (selectedUser != null)
                 {
                     return selectedUser;
                 }
@@ -177,7 +177,7 @@ namespace PartingPets.Data
 
         public void DeleteUser(int id)
         {
-            using(var db = new SqlConnection(_connectionString))
+            using (var db = new SqlConnection(_connectionString))
             {
                 var deleteUserQuery = @"
                     UPDATE 
@@ -190,7 +190,7 @@ namespace PartingPets.Data
 
                 var rowsAffected = db.Execute(deleteUserQuery, new { id });
 
-                if(rowsAffected != 1)
+                if (rowsAffected != 1)
                 {
                     throw new Exception("Error deleting the user");
                 }

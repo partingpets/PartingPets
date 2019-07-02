@@ -50,8 +50,12 @@ namespace PartingPets.Controllers
 
         // POST: api/Carts
         [HttpPost]
-        public void Post([FromBody] string value)
+        public ActionResult CreatCartItem([FromBody] CreateCartRequest cartItem)
         {
+            var newCartItem = _cartRepo.AddCartItem(cartItem);
+
+            return Ok(newCartItem);
+            
         }
 
         // PUT: api/Carts/5

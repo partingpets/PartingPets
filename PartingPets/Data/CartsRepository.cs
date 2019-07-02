@@ -94,5 +94,29 @@ namespace PartingPets.Data
                 }
             }
         }
+
+        public CreateCartRequest AddCartItem(CreateCartRequest cartItem)
+        {
+            using (var db = new SqlConnection(_connectionString))
+            {
+                var newCartItemQuery = @"
+                        INSERT INTO [ShoppingCart] (UserId, ProductId, Quantity)
+                        OUTPUT Inserted.*
+                        VALUES(@UserId, @ProductId, @Quantity)";
+
+                var newCartItem = db.QueryFirstOrDefault<CreateCartRequest>(newCartItemQuery, new
+                {
+                    cartItem.UserId,
+                    cartItem.ProductId,
+                    cartItem.Quantity,
+                });
+
+                if (newCartItem != null)
+                {
+                    return newCartItem;
+                }
+            }
+            throw new Exception("Cart item not created");
+        }
     }
 }
