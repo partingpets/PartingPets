@@ -60,8 +60,6 @@ namespace PartingPets.Controllers
                 orderItem.UnitPrice = productItem.UnitPrice;
                 // Now that the orderItem has all the required 4 fields we're passing it into a method that inserts it into the OrdersLine table
                 var orderLineItem = _ordersRepo.CreateOrderLines(orderItem);
-
-   
             }
  
 
