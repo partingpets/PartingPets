@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PartingPets.Data;
 using PartingPets.Models;
+using PartingPets.Validators;
 
 namespace PartingPets.Controllers
 {
@@ -14,12 +15,12 @@ namespace PartingPets.Controllers
     public class PetsController : SecureControllerBase
     {
         readonly PetRepository _petRepository;
-        readonly CreatePetRequestValidator _validator;
+        readonly PetRequestValidator _validator;
 
         public PetsController()
         {
             _petRepository = new PetRepository();
-            _validator = new CreatePetRequestValidator();
+            _validator = new PetRequestValidator();
         }
 
         [HttpGet]
@@ -44,20 +45,11 @@ namespace PartingPets.Controllers
         [HttpPost]
         public ActionResult AddPet(CreatePetRequest createRequest)
         {
-            if (_validator.Validate(createRequest))
+            if (!_validator.Validate(createRequest))
             {
                 return BadRequest(new { error = "pets must have a name, user Id, breed, date of birth, and date of death." });
             }
-            var newPet = _petRepository.AddPet( createRequest.Name, 
-                                                createRequest.UserId, 
-                                                createRequest.Breed, 
-                                                createRequest.DateOfBirth, 
-                                                createRequest.DateOfDeath, 
-                                                createRequest.BurialStreet, 
-                                                createRequest.BurialCity, 
-                                                createRequest.BurialState, 
-                                                createRequest.BurialZipCode, 
-                                                createRequest.BurialPlot );
+            var newPet = _petRepository.AddPet(createRequest);
 
             return Created($"api/pets/{newPet.Id}", newPet);
         }
@@ -80,16 +72,6 @@ namespace PartingPets.Controllers
             _petRepository.DeletePet(id);
 
             return Ok("Your pet's data has been deleted :(");
-        }
-
-        public class CreatePetRequestValidator
-        {
-            public bool Validate(CreatePetRequest requestToValidate)
-            {
-                return string.IsNullOrEmpty(requestToValidate.Name)
-                        || string.IsNullOrEmpty(requestToValidate.Breed)
-                        || string.IsNullOrEmpty(requestToValidate.DateOfBirth.ToString());
-            }
         }
     }
 }
