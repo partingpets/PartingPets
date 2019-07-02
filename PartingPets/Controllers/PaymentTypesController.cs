@@ -23,6 +23,12 @@ namespace PartingPets.Controllers
             _validator = new PaymentTypeRequestValidator();
         }
 
+        [HttpGet("user-pt/{id}")]
+        public ActionResult GetPTByUser(int id)
+        {
+            return Ok(_paymentRepository.GetUserPT(id));
+        }
+
         [HttpPost]
         public ActionResult AddPaymentType(CreatePaymentTypeRequest createPaymentType)
         {
@@ -30,11 +36,10 @@ namespace PartingPets.Controllers
             {
                 return BadRequest(new { error = "Payment Information is either not valid or not complete." });
             }
-            var newPaymentType = _paymentRepository.addPaymentType(createPaymentType);
+            var newPaymentType = _paymentRepository.AddPaymentType(createPaymentType);
 
             return Created($"api/paymentTypes/{newPaymentType.Id}", newPaymentType);
         }
-
 
     }
 }

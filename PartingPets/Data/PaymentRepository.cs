@@ -12,7 +12,7 @@ namespace PartingPets.Data
     {
         const string ConnectionString = "Server=localhost; Database=PartingPets; Trusted_Connection=True;";
     
-        public PaymentType addPaymentType(CreatePaymentTypeRequest newPaymentTypeObj)
+        public PaymentType AddPaymentType(CreatePaymentTypeRequest newPaymentTypeObj)
         {
             using (var db = new SqlConnection(ConnectionString))
             {
@@ -38,7 +38,16 @@ namespace PartingPets.Data
                 throw new Exception("No Payment Found");
 
             }
+        }
 
+        public IEnumerable<PaymentType> GetUserPT(int id)
+        {
+            using (var db = new SqlConnection(ConnectionString))
+            {
+                var userPTQuery = "select * from PaymentType where PaymentType.userId = @id";
+
+                return db.Query<PaymentType>(userPTQuery, new { id });
+            }
         }
     }
 }
