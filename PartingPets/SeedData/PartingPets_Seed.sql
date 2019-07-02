@@ -100,7 +100,6 @@ CREATE TABLE [dbo].[Orders](
     [UserID] [int] NOT NULL,
     [PaymentTypeId] [int] NOT NULL,
     [PurchaseDate] [datetime] NOT NULL,
-    [Total] [numeric](10, 2) NOT NULL,
 CONSTRAINT [PK_Orders] PRIMARY KEY CLUSTERED 
 (
     [Id] ASC
@@ -402,14 +401,14 @@ USE PartingPets
     INSERT INTO [dbo].[Products] ([Name], [ImageUrl], [CategoryId], [UnitPrice], [PartnerID], [Description], [IsOnSale], [IsDeleted]) VALUES ('Reclaimed Wood 5x7 Frame', 'http://intuitiveconsumer.com/blog/wp-content/uploads/2015/05/new-product.png', 5, 19.99, null, 'Stunning 5x7 reclaimed wooden frame for lasting memories', 0, 0)
    
 USE PartingPets
-    INSERT INTO [dbo].[Orders] ([UserID], [PaymentTypeId], [PurchaseDate], [Total]) VALUES (11, 1, '2018-09-05 13:07:44', 119.98)
-    INSERT INTO [dbo].[Orders] ([UserID], [PaymentTypeId], [PurchaseDate], [Total]) VALUES (12, 2, '2019-04-05 11:25:23', 306.98)
-    INSERT INTO [dbo].[Orders] ([UserID], [PaymentTypeId], [PurchaseDate], [Total]) VALUES (13, 3, '2019-04-05 11:25:23', 306.98)
-    INSERT INTO [dbo].[Orders] ([UserID], [PaymentTypeId], [PurchaseDate], [Total]) VALUES (14, 4, '2019-04-05 11:25:23', 306.98)
-    INSERT INTO [dbo].[Orders] ([UserID], [PaymentTypeId], [PurchaseDate], [Total]) VALUES (11, 1, '2018-09-05 13:07:44', 119.98)
-    INSERT INTO [dbo].[Orders] ([UserID], [PaymentTypeId], [PurchaseDate], [Total]) VALUES (12, 2, '2019-04-05 11:25:23', 306.98)
-    INSERT INTO [dbo].[Orders] ([UserID], [PaymentTypeId], [PurchaseDate], [Total]) VALUES (13, 3, '2019-04-05 11:25:23', 306.98)
-    INSERT INTO [dbo].[Orders] ([UserID], [PaymentTypeId], [PurchaseDate], [Total]) VALUES (14, 4, '2019-04-05 11:25:23', 306.98)
+    INSERT INTO [dbo].[Orders] ([UserID], [PaymentTypeId], [PurchaseDate]) VALUES (11, 1, '2018-09-05 13:07:44')
+    INSERT INTO [dbo].[Orders] ([UserID], [PaymentTypeId], [PurchaseDate]) VALUES (12, 2, '2019-04-05 11:25:23')
+    INSERT INTO [dbo].[Orders] ([UserID], [PaymentTypeId], [PurchaseDate]) VALUES (13, 3, '2019-04-05 11:25:23')
+    INSERT INTO [dbo].[Orders] ([UserID], [PaymentTypeId], [PurchaseDate]) VALUES (14, 4, '2019-04-05 11:25:23')
+    INSERT INTO [dbo].[Orders] ([UserID], [PaymentTypeId], [PurchaseDate]) VALUES (11, 1, '2018-09-05 13:07:44')
+    INSERT INTO [dbo].[Orders] ([UserID], [PaymentTypeId], [PurchaseDate]) VALUES (12, 2, '2019-04-05 11:25:23')
+    INSERT INTO [dbo].[Orders] ([UserID], [PaymentTypeId], [PurchaseDate]) VALUES (13, 3, '2019-04-05 11:25:23')
+    INSERT INTO [dbo].[Orders] ([UserID], [PaymentTypeId], [PurchaseDate]) VALUES (14, 4, '2019-04-05 11:25:23')
     
 
 USE PartingPets

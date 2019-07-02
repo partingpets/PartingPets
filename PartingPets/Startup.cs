@@ -47,6 +47,8 @@ namespace PartingPets
             services.Configure<DbConfiguration>(Configuration);
             services.AddTransient<UsersRepository>();
             services.AddTransient<CartsRepository>();
+            services.AddTransient<OrdersRepository>();
+            services.AddTransient<ProductsRepository>();
             services.AddSingleton<IConfiguration>(Configuration);
         }
 
