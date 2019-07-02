@@ -31,9 +31,10 @@ namespace PartingPets.Controllers
 
         // GET: api/Orders/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public ActionResult GetOrdersById(int id)
         {
-            return "value";
+            var userOrders = _ordersRepo.getUsersOrders(id);
+            return Ok(userOrders);
         }
 
         // POST: api/Orders
