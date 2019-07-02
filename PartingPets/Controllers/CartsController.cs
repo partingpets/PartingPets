@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PartingPets.Data;
 using PartingPets.Models;
+using PartingPets.Utils;
 
 namespace PartingPets.Controllers
 {
@@ -13,18 +14,22 @@ namespace PartingPets.Controllers
     [ApiController]
     public class CartsController : SecureControllerBase
     {
-        readonly CartsRepository _repo;
-        
-        public CartsController(CartsRepository repo)
+        readonly CartsRepository _cartRepo;
+        readonly UsersRepository _userRepo;
+        readonly UserAuthorization _userAuth;
+
+        public CartsController(CartsRepository repo, UsersRepository userRepo)
         {
-            _repo = repo;
+            _cartRepo = repo;
+            _userRepo = userRepo;
+            _userAuth = new UserAuthorization();
         }
 
         // GET: api/Carts
         [HttpGet]
         public ActionResult<ShoppingCart> GetAllCarts()
         {
-            var allCarts = _repo.GetAllCarts();
+            var allCarts = _cartRepo.GetAllCarts();
             return Ok(allCarts);
         }
 
@@ -34,7 +39,7 @@ namespace PartingPets.Controllers
         {
             try
             {
-                var selectedCart = _repo.GetShoppingCartByUserId(id);
+                var selectedCart = _cartRepo.GetShoppingCartByUserId(id);
                 return Ok(selectedCart);
             }
             catch (System.Exception)
@@ -56,9 +61,29 @@ namespace PartingPets.Controllers
         }
 
         // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete("{userId}/{id}")]
+        public ActionResult Delete(int userId, int id)
         {
+            var jwtFirebaseId = UserId;
+
+            var authed = _userAuth.AuthorizeUserByUid(userId, jwtFirebaseId, _userRepo);
+            if (!authed)
+            {
+                return Unauthorized(new { error = "User not authorized to perform operation" });
+            }
+            else
+            {
+                try
+                {
+                    _cartRepo.DeleteShoppingCartItem(id);
+                }
+                catch (System.Exception e)
+                {
+
+                    throw e;
+                }
+            }
+            return NoContent();
         }
     }
 }
