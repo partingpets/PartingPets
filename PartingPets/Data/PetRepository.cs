@@ -12,14 +12,24 @@ namespace PartingPets.Data
     {
         const string ConnectionString = "Server=localhost; Database=PartingPets; Trusted_Connection=True;";
 
-        public Pet AddPet(string name, int userId, string breed, DateTime dateOfBirth, DateTime dateOfDeath, string burialStreet, string burialCity, string burialState, int burialZipCode, string burialPlot)
+        public Pet AddPet(CreatePetRequest newPetObj)
         {
             using (var db = new SqlConnection(ConnectionString))
             {
-                var newPetQuery = db.QueryFirstOrDefault<Pet>(@"Insert into pets (name, userId, breed, dateOfBirth, dateOfDeath, burialStreet, burialCity, burialState, burialZipCode, burialPlot)
-                                                        Output inserted.*
-                                                        Values(@name,@userId,@breed,@dateOfBirth,@dateOfDeath,@burialStreet,@burialCity,@burialState,@burialZipCode,@burialPlot)",
-                    new { name, userId, breed, dateOfBirth, dateOfDeath, burialStreet, burialCity, burialState, burialZipCode, burialPlot });
+                var newPetQuery = db.QueryFirstOrDefault<Pet>(@"
+                    Insert into pets (name, userId, breed, dateOfBirth, dateOfDeath, burialStreet, burialCity, burialState, burialZipCode, burialPlot)
+                    Output inserted.*
+                    Values(@name,@userId,@breed,@dateOfBirth,@dateOfDeath,@burialStreet,@burialCity,@burialState,@burialZipCode,@burialPlot)",
+                    new { newPetObj.Name,
+                          newPetObj.UserId,
+                          newPetObj.Breed,
+                          newPetObj.DateOfBirth,
+                          newPetObj.DateOfDeath,
+                          newPetObj.BurialStreet,
+                          newPetObj.BurialCity,
+                          newPetObj.BurialState,
+                          newPetObj.BurialZipCode,
+                          newPetObj.BurialPlot });
                 if (newPetQuery != null)
                 {
                     return newPetQuery;
