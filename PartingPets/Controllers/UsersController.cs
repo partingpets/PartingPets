@@ -36,11 +36,19 @@ namespace PartingPets.Controllers
         [HttpGet("{id}", Name = "Get")]
         public ActionResult<User> Get(string id)
         {
-
             try
             {
-                var selectedUser = _repo.GetUserById(id);
-                return Ok(selectedUser);
+                if (id.Length < 5)
+                {
+                    var selectedUser = _repo.GetUserByUserId(id);
+                    return Ok(selectedUser);
+                }
+                else
+                {
+                    var selectedUser = _repo.GetUserById(id);
+                    return Ok(selectedUser);
+                }
+                
             }
             catch(System.Exception)
             {
