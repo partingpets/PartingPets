@@ -16,12 +16,15 @@ namespace PartingPets.Models
         public string State { get; set; }
         public string ZipCode { get; set; }
         public string Email { get; set; }
-        public int Quantity { get; set; }
-        public string Name { get; set; }
-        public decimal UnitPrice { get; set; }
-        public decimal Subtotal { get; set; }
-        public decimal Tax { get; set; }
-        public decimal Total { get; set; }
+
+        public List<OrderLines> OrderItems { get; set; }
+
+        //public int Quantity { get; set; }
+        //public string Name { get; set; }
+        //public decimal UnitPrice { get; set; }
+        //public decimal Subtotal { get; set; }
+        //public decimal Tax { get; set; }
+        //public decimal Total { get; set; }
 
     }
 }
