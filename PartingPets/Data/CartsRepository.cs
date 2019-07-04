@@ -56,6 +56,7 @@ namespace PartingPets.Data
                         SELECT
                             sc.Id AS CartId,
                             p.Id AS ProductId,
+                            u.Id AS UserId,
                             p.IsDeleted,
                             p.Name,
                             p.Description,
@@ -117,6 +118,32 @@ namespace PartingPets.Data
                 }
             }
             throw new Exception("Cart item not created");
+        }
+
+        public ShoppingCart EditCartItem(ShoppingCart cartItem)
+        {
+            using (var db = new SqlConnection(_connectionString))
+            {
+                var editCartItemQuery = @"
+                    UPDATE
+                        [ShoppingCart]
+                    SET
+                        [Quantity] = @quantity
+                    WHERE
+                        id = @CartId";
+
+                var rowsAffected = db.Execute(editCartItemQuery, new
+                {
+                    cartItem.Quantity,
+                    cartItem.CartId
+                });
+
+                if (rowsAffected == 1)
+                {
+                    return cartItem;
+                }
+                throw new Exception("Error updating Shopping Cart Item");
+            }
         }
     }
 }

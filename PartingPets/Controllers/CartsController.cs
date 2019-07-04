@@ -60,8 +60,19 @@ namespace PartingPets.Controllers
 
         // PUT: api/Carts/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public ActionResult<ShoppingCart> UpdateCartItem(int id, [FromBody] ShoppingCart updateCartItemObj)
         {
+            var jwtFirebaseId = UserId;
+            var submittingUser = _userRepo.GetUserByDbId(updateCartItemObj.UserId);
+            if (submittingUser.FireBaseUid != jwtFirebaseId && submittingUser.IsAdmin == false)
+            {
+                // return 401 as the User they are passing in is not the same as the one making the request
+                return Unauthorized();
+            }
+
+            var updatedCartItem = _cartRepo.EditCartItem(updateCartItemObj);
+
+            return Ok(updatedCartItem);
         }
 
         // DELETE: api/ApiWithActions/5

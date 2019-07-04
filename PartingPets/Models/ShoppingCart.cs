@@ -9,6 +9,7 @@ namespace PartingPets.Models
     {
         public int CartId { get; set; }
         public int ProductId { get; set; }
+        public int UserId { get; set; }
         public bool IsDeleted { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
