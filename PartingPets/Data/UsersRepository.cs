@@ -37,6 +37,8 @@ namespace PartingPets.Data
                             Zipcode,
                             Email,
                             IsPartner,
+                            IsDeleted,
+                            DateDeleted,
                             PartnerID
                         FROM [User]";
 
@@ -63,6 +65,26 @@ namespace PartingPets.Data
                 var selectedUser = db.QueryFirstOrDefault<User>(getUserByIdQuery, new { id });
 
                 if(selectedUser != null)
+                {
+                    return selectedUser;
+                }
+            }
+            throw new Exception("User not found");
+        }
+
+        public User GetUserByUserId(string id)
+        {
+            using (var db = new SqlConnection(_connectionString))
+            {
+                var getUserByIdQuery = @"
+                        SELECT 
+                            *
+                        FROM [User] u
+                        WHERE u.id = @id";
+
+                var selectedUser = db.QueryFirstOrDefault<User>(getUserByIdQuery, new { id });
+
+                if (selectedUser != null)
                 {
                     return selectedUser;
                 }

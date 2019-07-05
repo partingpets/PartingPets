@@ -36,11 +36,19 @@ namespace PartingPets.Controllers
         [HttpGet("{id}", Name = "Get")]
         public ActionResult<User> Get(string id)
         {
-
             try
             {
-                var selectedUser = _repo.GetUserById(id);
-                return Ok(selectedUser);
+                if (id.Length < 5)
+                {
+                    var selectedUser = _repo.GetUserByUserId(id);
+                    return Ok(selectedUser);
+                }
+                else
+                {
+                    var selectedUser = _repo.GetUserById(id);
+                    return Ok(selectedUser);
+                }
+                
             }
             catch(System.Exception)
             {
@@ -70,7 +78,8 @@ namespace PartingPets.Controllers
         public ActionResult<EditUserRequest> UpdateUser(int id, [FromBody] EditUserRequest updatedUserObj)
         {
             var jwtFirebaseId = UserId;
-            if(updatedUserObj.FireBaseUid != jwtFirebaseId && updatedUserObj.IsAdmin == false)
+            User submittingUser = _repo.GetUserById(jwtFirebaseId);
+            if(updatedUserObj.FireBaseUid != jwtFirebaseId && submittingUser.IsAdmin == false)
             {
                 // return 401 as the User they are passing in is not the same as the one making the request
                 return Unauthorized();
