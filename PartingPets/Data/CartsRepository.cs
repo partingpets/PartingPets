@@ -56,6 +56,7 @@ namespace PartingPets.Data
                         SELECT
                             sc.Id AS CartId,
                             p.Id AS ProductId,
+                            u.Id AS UserId,
                             p.IsDeleted,
                             p.Name,
                             p.Description,
@@ -92,6 +93,56 @@ namespace PartingPets.Data
                 {
                     throw new Exception("Error deleteing the cart item");
                 }
+            }
+        }
+
+        public CreateCartRequest AddCartItem(CreateCartRequest cartItem)
+        {
+            using (var db = new SqlConnection(_connectionString))
+            {
+                var newCartItemQuery = @"
+                        INSERT INTO [ShoppingCart] (UserId, ProductId, Quantity)
+                        OUTPUT Inserted.*
+                        VALUES(@UserId, @ProductId, @Quantity)";
+
+                var newCartItem = db.QueryFirstOrDefault<CreateCartRequest>(newCartItemQuery, new
+                {
+                    cartItem.UserId,
+                    cartItem.ProductId,
+                    cartItem.Quantity,
+                });
+
+                if (newCartItem != null)
+                {
+                    return newCartItem;
+                }
+            }
+            throw new Exception("Cart item not created");
+        }
+
+        public ShoppingCart EditCartItem(ShoppingCart cartItem)
+        {
+            using (var db = new SqlConnection(_connectionString))
+            {
+                var editCartItemQuery = @"
+                    UPDATE
+                        [ShoppingCart]
+                    SET
+                        [Quantity] = @quantity
+                    WHERE
+                        id = @CartId";
+
+                var rowsAffected = db.Execute(editCartItemQuery, new
+                {
+                    cartItem.Quantity,
+                    cartItem.CartId
+                });
+
+                if (rowsAffected == 1)
+                {
+                    return cartItem;
+                }
+                throw new Exception("Error updating Shopping Cart Item");
             }
         }
     }
