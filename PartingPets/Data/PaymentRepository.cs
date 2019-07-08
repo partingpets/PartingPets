@@ -44,7 +44,7 @@ namespace PartingPets.Data
         {
             using (var db = new SqlConnection(ConnectionString))
             {
-                var userPTQuery = "select * from PaymentType where PaymentType.userId = @id";
+                var userPTQuery = "select * from PaymentType where PaymentType.userId = @id and PaymentType.IsDeleted = 0";
 
                 return db.Query<PaymentType>(userPTQuery, new { id });
             }
