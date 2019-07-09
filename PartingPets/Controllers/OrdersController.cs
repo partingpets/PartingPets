@@ -24,25 +24,65 @@ namespace PartingPets.Controllers
 
         // GET: api/Orders
         [HttpGet]
-        public IEnumerable<string> Get()
+        public ActionResult GetAllOrders()
         {
-            return new string[] { "value1", "value2" };
+            var allUserOrders = _ordersRepo.getAllUserOrders();
+
+            foreach (var order in allUserOrders)
+            {
+                decimal lineTotal = 0;
+                decimal subTotal = 0;
+                decimal taxRate = Convert.ToDecimal(0.095);
+
+                foreach (var orderline in order.OrderItems)
+                {
+                    lineTotal = orderline.Quantity * orderline.UnitPrice;
+                    orderline.LineTotal = lineTotal;
+                    subTotal = subTotal + lineTotal;
+                }
+
+                order.Subtotal = subTotal;
+                order.Tax = Decimal.Parse((subTotal * taxRate).ToString("0.00"));
+                order.Total = order.Subtotal + order.Tax;
+            }
+
+            return Ok (allUserOrders);
         }
+        
 
         // GET: api/Orders/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public ActionResult GetOrdersById(int id)
         {
-            return "value";
+            var userOrders = _ordersRepo.getUsersOrders(id);
+
+            foreach (var order in userOrders)
+            {
+                decimal lineTotal = 0;
+                decimal subTotal = 0;
+                decimal taxRate = Convert.ToDecimal(0.095);
+
+                foreach (var orderline in order.OrderItems)
+                {
+                    lineTotal = orderline.Quantity * orderline.UnitPrice;
+                    orderline.LineTotal = lineTotal;
+                    subTotal = subTotal + lineTotal;
+                }
+
+                order.Subtotal = subTotal;
+                order.Tax = Decimal.Parse((subTotal * taxRate).ToString("0.00"));
+                order.Total = order.Subtotal + order.Tax;
+            }
+            return Ok(userOrders);
+
         }
+
 
         // POST: api/Orders
         [HttpPost]
         public ActionResult CreateOrder(Orders newOrderObj)
         {
-            // if statement for newOrderObj.OrderLines.Length = 0 reject message 
-            // try catch
-        
+
             var newOrder = _ordersRepo.CreateOrder(newOrderObj);
             if (newOrder == null)
             {
@@ -61,7 +101,7 @@ namespace PartingPets.Controllers
                 // Now that the orderItem has all the required 4 fields we're passing it into a method that inserts it into the OrdersLine table
                 var orderLineItem = _ordersRepo.CreateOrderLines(orderItem);
             }
- 
+
 
             return Created($"api/orders/{newOrder.Id}", newOrder);
         }
