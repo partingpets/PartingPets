@@ -50,6 +50,14 @@ namespace PartingPets.Data
             }
         }
 
+        public PaymentType GetSinglePT(int id)
+        {
+            using (var db = new SqlConnection(ConnectionString))
+            {
+                return db.QueryFirstOrDefault<PaymentType>("select * from PaymentType where PaymentType.id = @id", new { id });
+            }
+        }
+
         public PaymentType UpdatePT(PaymentType PTToUpdate)
         {
             using (var db = new SqlConnection(ConnectionString))
