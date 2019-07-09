@@ -83,23 +83,24 @@ namespace PartingPets.Controllers
         {
             var userOrder = _ordersRepo.getUserOrderByOrderId(orderid);
 
-            foreach (var order in userOrder)
-            {
+            // foreach (var order in userOrder)
+            // {
                 decimal lineTotal = 0;
                 decimal subTotal = 0;
                 decimal taxRate = Convert.ToDecimal(0.095);
 
-                foreach (var orderline in order.OrderItems)
+                foreach (var orderline in userOrder.OrderItems)
                 {
                     lineTotal = orderline.Quantity * orderline.UnitPrice;
                     orderline.LineTotal = lineTotal;
                     subTotal = subTotal + lineTotal;
                 }
 
-                order.Subtotal = subTotal;
-                order.Tax = Decimal.Parse((subTotal * taxRate).ToString("0.00"));
-                order.Total = order.Subtotal + order.Tax;
-            }
+                userOrder.Subtotal = subTotal;
+                userOrder.Tax = decimal.Parse((subTotal * taxRate).ToString("0.00"));
+                userOrder.Total = userOrder.Subtotal + userOrder.Tax;
+            // }
+
             return Ok(userOrder);
 
         }
