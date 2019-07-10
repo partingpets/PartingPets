@@ -19,6 +19,8 @@ namespace PartingPets.Models
         public decimal Subtotal { get; set; }
         public decimal Tax { get; set; }
         public decimal Total { get; set; }
+        public int PaymentTypeId { get; set; }
+        public string Payment { get; set; }
 
         public List<OrderLines> OrderItems { get; set; }
 

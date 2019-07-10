@@ -49,6 +49,7 @@ namespace PartingPets
             services.AddTransient<CartsRepository>();
             services.AddTransient<OrdersRepository>();
             services.AddTransient<ProductsRepository>();
+            services.AddTransient<PaymentRepository>();
             services.AddSingleton<IConfiguration>(Configuration);
         }
 
