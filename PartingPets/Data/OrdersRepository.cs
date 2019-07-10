@@ -75,7 +75,7 @@ namespace PartingPets.Data
                     userInfo.OrderItems = matchingOrderLines;
                 }
 
-                return userOrderInfo;
+                return userOrderInfo; 
             }
         }
 
@@ -99,6 +99,26 @@ namespace PartingPets.Data
                 return userOrderInfo;
             }
         }
-        
+
+        public userOrder getUserOrderByOrderId(int orderid)
+        {
+            using (var db = new SqlConnection(ConnectionString))
+            {
+                var sql = "select o.Id, o.PurchaseDate, u.FirstName, u.LastName, u.Street1, u.City, u.State, u.ZipCode, u.Email from Orders o join [User] u on o.UserID = u.Id where o.Id = @orderid";
+
+                var userOrderInfo = db.QueryFirstOrDefault<userOrder>(sql, new { orderid });
+
+                var userOrderLines = db.Query<OrderLines>("select ol.OrdersId, ol.Quantity, p.Name, ol.UnitPrice, p.Id from Orders o join OrdersLine ol on o.Id = ol.OrdersId join Products p on ol.ProductId = p.Id join [User] u on o.UserID = u.Id").ToList();
+
+                {
+
+                    var matchingOrderLines = userOrderLines.Where(x => x.OrdersId == userOrderInfo.Id).ToList();
+                    userOrderInfo.OrderItems = matchingOrderLines;
+                }
+
+                return userOrderInfo;
+            }
+        }
+
     }
 }

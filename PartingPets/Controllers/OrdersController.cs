@@ -77,6 +77,31 @@ namespace PartingPets.Controllers
 
         }
 
+        // GET: api/Orders/order/1005
+        [HttpGet("order/{orderid}")]
+        public ActionResult GetOrderByOrderId(int orderid)
+        {
+            var userOrder = _ordersRepo.getUserOrderByOrderId(orderid);
+
+                decimal lineTotal = 0;
+                decimal subTotal = 0;
+                decimal taxRate = Convert.ToDecimal(0.095);
+
+                foreach (var orderline in userOrder.OrderItems)
+                {
+                    lineTotal = orderline.Quantity * orderline.UnitPrice;
+                    orderline.LineTotal = lineTotal;
+                    subTotal = subTotal + lineTotal;
+                }
+
+                userOrder.Subtotal = subTotal;
+                userOrder.Tax = decimal.Parse((subTotal * taxRate).ToString("0.00"));
+                userOrder.Total = userOrder.Subtotal + userOrder.Tax;
+
+            return Ok(userOrder);
+
+        }
+
 
         // POST: api/Orders
         [HttpPost]
