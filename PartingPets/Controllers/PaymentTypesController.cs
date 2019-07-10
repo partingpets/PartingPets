@@ -29,6 +29,12 @@ namespace PartingPets.Controllers
             return Ok(_paymentRepository.GetUserPT(id));
         }
 
+        [HttpGet("{id}")]
+        public ActionResult GetSinglePT(int id)
+        {
+            return Ok(_paymentRepository.GetSinglePT(id));
+        }
+
         [HttpPost]
         public ActionResult AddPaymentType(CreatePaymentTypeRequest createPaymentType)
         {
