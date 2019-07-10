@@ -15,11 +15,13 @@ namespace PartingPets.Controllers
     {
         readonly OrdersRepository _ordersRepo;
         readonly ProductsRepository _productsRepo;
+        readonly PaymentRepository _paymentRepo;
 
-        public OrdersController(OrdersRepository ordersRepo, ProductsRepository productsRepo)
+        public OrdersController(OrdersRepository ordersRepo, ProductsRepository productsRepo, PaymentRepository paymentRepo)
         {
             _ordersRepo = ordersRepo;
             _productsRepo = productsRepo;
+            _paymentRepo = paymentRepo;
         }
 
         // GET: api/Orders
@@ -30,6 +32,9 @@ namespace PartingPets.Controllers
 
             foreach (var order in allUserOrders)
             {
+                var paymentTypeName = _paymentRepo.GetSinglePT(order.PaymentTypeId);
+                order.Payment = paymentTypeName.Name;
+
                 decimal lineTotal = 0;
                 decimal subTotal = 0;
                 decimal taxRate = Convert.ToDecimal(0.095);
@@ -58,6 +63,9 @@ namespace PartingPets.Controllers
 
             foreach (var order in userOrders)
             {
+                var paymentTypeName = _paymentRepo.GetSinglePT(order.PaymentTypeId);
+                order.Payment = paymentTypeName.Name;
+
                 decimal lineTotal = 0;
                 decimal subTotal = 0;
                 decimal taxRate = Convert.ToDecimal(0.095);
@@ -83,7 +91,10 @@ namespace PartingPets.Controllers
         {
             var userOrder = _ordersRepo.getUserOrderByOrderId(orderid);
 
-                decimal lineTotal = 0;
+            var paymentTypeName = _paymentRepo.GetSinglePT(userOrder.PaymentTypeId);
+            userOrder.Payment = paymentTypeName.Name;
+
+            decimal lineTotal = 0;
                 decimal subTotal = 0;
                 decimal taxRate = Convert.ToDecimal(0.095);
 
