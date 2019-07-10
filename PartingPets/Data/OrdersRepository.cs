@@ -110,7 +110,6 @@ namespace PartingPets.Data
 
                 var userOrderLines = db.Query<OrderLines>("select ol.OrdersId, ol.Quantity, p.Name, ol.UnitPrice, p.Id from Orders o join OrdersLine ol on o.Id = ol.OrdersId join Products p on ol.ProductId = p.Id join [User] u on o.UserID = u.Id").ToList();
 
-                // foreach (var userInfo in userOrderInfo)
                 {
 
                     var matchingOrderLines = userOrderLines.Where(x => x.OrdersId == userOrderInfo.Id).ToList();
